@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QR Peach</title>
+  <meta name="description" content="QR Peach: learn how QR codes are created, create and debug QR payloads with the interactive encoder, and add QR generation to your own application with qrpeach.js." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="assets/js/tailwind-config.js"></script>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="stylesheet" href="assets/css/site.css" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a class="brand-lockup" href="index.html">
+        <span class="brand-mark"><img src="assets/peach.svg" alt="" /></span>
+        <span>
+          <span class="brand-name">QR Peach</span>
+          <span class="brand-tag">Open QR reference and encoder</span>
+        </span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Toggle navigation" data-nav-toggle>
+        <span class="sr-only">Toggle navigation</span>
+        <span class="nav-toggle-box" aria-hidden="true">
+          <span class="nav-toggle-line"></span>
+          <span class="nav-toggle-line"></span>
+          <span class="nav-toggle-line"></span>
+        </span>
+      </button>
+      <nav class="site-nav" id="site-nav">
+        <a class="nav-link active" href="index.html">Home</a>
+        <a class="nav-link" href="learn.html">Learn</a>
+        <a class="nav-link" href="encoder.html">Encoder</a>
+        <a class="nav-link" href="sources.html">Sources</a>
+        <a class="nav-link" href="download.html">Download</a>
+        <a class="nav-link" href="https://github.com/dahln/QRPeach" target="_blank" rel="noreferrer" aria-label="GitHub"><i data-lucide="github" class="w-4 h-4"></i></a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-shell section-stack">
+    <section class="page-hero">
+      <div class="hero-kicker"><i data-lucide="sparkles" class="w-4 h-4"></i> Three ways to use QR Peach</div>
+      <div class="mt-6">
+        <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-5">Learn, create, and ship QR codes.</h1>
+        <p class="text-lg text-slate-200 leading-8 max-w-2xl">QR Peach helps you understand how QR codes are created, create and debug real QR payloads, and add QR generation to your own applications with <strong>qrpeach.js</strong>.</p>
+        <div class="cta-row">
+          <a class="button-secondary" href="learn.html"><i data-lucide="layers-3" class="w-4 h-4"></i> Learn</a>
+          <a class="button-primary" href="encoder.html"><i data-lucide="scan-search" class="w-4 h-4"></i> Open Encoder</a>
+          <a class="button-secondary" href="download.html"><i data-lucide="download" class="w-4 h-4"></i> Download Library</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid md:grid-cols-3 gap-5">
+      <a class="feature-link" href="learn.html">
+        <article class="feature-card h-full">
+          <div class="source-badge"><i data-lucide="layers-3" class="w-5 h-5"></i></div>
+          <h2 class="card-title mt-4">Learn how QR codes are created</h2>
+          <p class="card-copy">Follow the full path from payload text to bytes, bitstream structure, error correction, and final module placement.</p>
+        </article>
+      </a>
+      <a class="feature-link" href="encoder.html">
+        <article class="feature-card h-full">
+          <div class="source-badge"><i data-lucide="scan-search" class="w-5 h-5"></i></div>
+          <h2 class="card-title mt-4">Create and debug QR codes</h2>
+          <p class="card-copy">Build payloads, inspect the encoding steps, and use the live encoder to troubleshoot what ends up inside the symbol.</p>
+        </article>
+      </a>
+      <a class="feature-link" href="download.html">
+        <article class="feature-card h-full">
+          <div class="source-badge"><i data-lucide="download" class="w-5 h-5"></i></div>
+          <h2 class="card-title mt-4">Add QR Peach to your own applications</h2>
+          <p class="card-copy">Use <strong>qrpeach.js</strong> as the reusable QR engine behind your own tools, demos, or production workflows.</p>
+        </article>
+      </a>
+      <a class="feature-link md:col-span-3" href="https://github.com/dahln/QRPeach" target="_blank" rel="noreferrer">
+        <article class="card h-full md:flex md:items-center md:justify-between gap-6">
+          <div>
+            <h2 class="card-title">Open Source</h2>
+            <p class="card-copy mt-4">Explore the source on GitHub, use <strong>qrpeach.js</strong> in your own work, and follow the project.</p>
+          </div>
+          <span class="button-primary mt-2 md:mt-0"><i data-lucide="arrow-up-right" class="w-4 h-4"></i> View on GitHub</span>
+        </article>
+      </a>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+  </footer>
+
+  <script src="assets/js/site-nav.js"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

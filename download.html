@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QR Peach Download</title>
+  <meta name="description" content="Download qrpeach.js — a browser QR library that creates QR codes, returns full encoding metadata for learning and debugging, and can be added to any application." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="assets/js/tailwind-config.js"></script>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="stylesheet" href="assets/css/site.css" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a class="brand-lockup" href="index.html">
+        <span class="brand-mark"><img src="assets/peach.svg" alt="" /></span>
+        <span>
+          <span class="brand-name">QR Peach</span>
+          <span class="brand-tag">Open QR reference and encoder</span>
+        </span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Toggle navigation" data-nav-toggle>
+        <span class="sr-only">Toggle navigation</span>
+        <span class="nav-toggle-box" aria-hidden="true">
+          <span class="nav-toggle-line"></span>
+          <span class="nav-toggle-line"></span>
+          <span class="nav-toggle-line"></span>
+        </span>
+      </button>
+      <nav class="site-nav" id="site-nav">
+        <a class="nav-link" href="index.html">Home</a>
+        <a class="nav-link" href="learn.html">Learn</a>
+        <a class="nav-link" href="encoder.html">Encoder</a>
+        <a class="nav-link" href="sources.html">Sources</a>
+        <a class="nav-link active" href="download.html">Download</a>
+        <a class="nav-link" href="https://github.com/dahln/QRPeach" target="_blank" rel="noreferrer" aria-label="GitHub"><i data-lucide="github" class="w-4 h-4"></i></a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-shell section-stack">
+    <section class="page-hero">
+      <div class="hero-kicker"><i data-lucide="download" class="w-4 h-4"></i> Reuse the encoder outside this site</div>
+      <div class="hero-grid mt-6">
+        <div>
+          <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-5">Download</h1>
+          <p class="text-lg text-slate-200 leading-8 max-w-2xl">qrpeach.js is a standalone browser QR library that creates QR codes and helps you understand them. It returns the full encoding path — payload bytes, bitstream values, ECC blocks, zigzag placement, and the final symbol — so you can inspect, debug, or teach every step. Drop it into any browser page with no external dependencies.</p>
+          <div class="cta-row">
+            <a class="button-primary" href="https://www.npmjs.com/package/qrpeach" target="_blank" rel="noreferrer"><i data-lucide="package" class="w-4 h-4"></i> npm Package</a>
+            <a class="button-secondary" href="https://cdn.jsdelivr.net/npm/qrpeach@1.0.0/dist/qrpeach.min.js" target="_blank" rel="noreferrer">jsDelivr CDN</a>
+            <a class="button-secondary" href="https://unpkg.com/qrpeach@1.0.0/dist/qrpeach.min.js" target="_blank" rel="noreferrer">UNPKG CDN</a>
+            <a class="button-secondary" href="https://github.com/dahln/QRPeach" target="_blank" rel="noreferrer"><i data-lucide="external-link" class="w-4 h-4"></i> Repository</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="download-list">
+      <article class="download-item">
+        <div>
+          <h2 class="card-title">npm install qrpeach</h2>
+          <p class="card-copy">The published package carries the browser build, versioned metadata, and CDN entry points so you can install the package or reuse the same files from npm-backed CDNs.</p>
+        </div>
+        <a class="button-primary" href="https://www.npmjs.com/package/qrpeach" target="_blank" rel="noreferrer">Open npm</a>
+      </article>
+      <article class="download-item">
+        <div>
+          <h2 class="card-title">jsDelivr and UNPKG</h2>
+          <p class="card-copy">Version tables, alignment centers, remainder bits, Reed-Solomon block rows, mode bits, ECC format bits, and source metadata are embedded directly in qrpeach.js, so the same single-file browser build can be loaded from jsDelivr or UNPKG.</p>
+        </div>
+        <a class="button-secondary" href="https://cdn.jsdelivr.net/npm/qrpeach@1.0.0/dist/qrpeach.min.js" target="_blank" rel="noreferrer">Open jsDelivr</a>
+      </article>
+      <article class="download-item">
+        <div>
+          <h2 class="card-title">GitHub Release Download</h2>
+          <p class="card-copy">Each successful publish also uploads stable release assets so you can download qrpeach.js directly without going through a package manager or CDN cache.</p>
+        </div>
+        <a class="button-secondary" href="https://github.com/dahln/qrpeach/releases/latest/download/qrpeach.js" target="_blank" rel="noreferrer">Direct Download</a>
+      </article>
+    </section>
+
+    <section class="card">
+      <h2 class="section-heading text-2xl font-bold mb-2">Package Endpoints</h2>
+      <p class="section-intro">QR Peach starts at version 1.0.0. These are the public services the published package is intended to live on.</p>
+      <div class="cite-box mt-5">
+        <pre class="code-block">npm install qrpeach
+
+https://www.npmjs.com/package/qrpeach
+https://cdn.jsdelivr.net/npm/qrpeach@1.0.0/dist/qrpeach.min.js
+https://unpkg.com/qrpeach@1.0.0/dist/qrpeach.min.js
+https://github.com/dahln/qrpeach/releases/latest/download/qrpeach.js</pre>
+      </div>
+    </section>
+
+    <section class="grid lg:grid-cols-2 gap-6">
+      <article class="card">
+        <h2 class="section-heading text-2xl font-bold mb-2">Basic Browser Use</h2>
+        <p class="section-intro">Load the published browser build from a package CDN. The library computes the final masked symbol itself.</p>
+        <div class="cite-box mt-5">
+          <pre class="code-block">&lt;script src="https://cdn.jsdelivr.net/npm/qrpeach@1.0.0/dist/qrpeach.min.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  const model = QRPeach.Generate({
+    type: 'text',
+    inputs: { value: 'HELLO WORLD' },
+    version: 2,
+    ecc: 'M'
+  });
+
+  console.log(model.ok);
+  console.log(model.payloadText);
+  console.log(model.values);
+  console.log(model.finalQr);
+&lt;/script&gt;</pre>
+        </div>
+      </article>
+      <article class="card" id="api-entry-points">
+        <h2 class="section-heading text-2xl font-bold mb-2">API Entry Points</h2>
+        <p class="section-intro">The browser build exposes two public methods on <span class="font-mono">window.QRPeach</span>: one for generation and one for debugging.</p>
+        <div class="rounded-3xl bg-white border border-slate-200 p-5 mt-5">
+          <pre class="code-block">window.QRPeach
+QRPeach.Generate(options, format?, renderOptions?)
+QRPeach.Debug(source, options?)</pre>
+        </div>
+        <p class="text-sm text-slate-600 leading-7 mt-5"><span class="font-semibold text-slate-900">Generate</span> returns a QR model or a render-ready SVG/PNG/JPG asset. <span class="font-semibold text-slate-900">Debug</span> returns JSON-safe diagnostic data either from generation inputs/models or from an uploaded QR image.</p>
+      </article>
+    </section>
+
+    <section class="card">
+      <h2 class="section-heading text-2xl font-bold mb-2">Global API Catalog</h2>
+      <p class="section-intro">Each entry below includes the exported name, what parameters it accepts, and what shape it returns.</p>
+
+      <div class="flex flex-col gap-6 mt-6">
+        <article class="card">
+          <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 mb-2">Name</p>
+          <h3 class="card-title font-mono">window.QRPeach</h3>
+          <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 mt-5 mb-2">Description</p>
+          <p class="card-copy">Primary browser-global namespace. Loading the published browser build from npm, jsDelivr, UNPKG, or the GitHub release asset attaches the minimal public API here.</p>
+          <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 mt-5 mb-2">Parameters</p>
+          <div class="cite-box">
+            <pre class="code-block">None.
+
+Load the browser build, then read window.QRPeach.</pre>
+          </div>
+          <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 mt-5 mb-2">Returns</p>
+          <div class="cite-box">
+            <pre class="code-block">{
+  Generate: Function,
+  Debug: Function
+}</pre>
+          </div>
+          <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 mt-5 mb-2">Code Snippet</p>
+          <div class="cite-box">
+            <pre class="code-block">&lt;script src="https://unpkg.com/qrpeach@1.0.0/dist/qrpeach.min.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  const api = window.QRPeach;
+  console.log(Object.keys(api));
+&lt;/script&gt;</pre>
+          </div>
+        </article>
+
+        <article class="card">
+          <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 mb-2">Name</p>
+          <h3 class="card-title font-mono">QRPeach.Generate(options, format?, renderOptions?)</h3>
+          <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 mt-5 mb-2">Description</p>
+          <p class="card-copy">Generates a QR model from a payload type, typed inputs, version, and ECC level. When you also pass an output format, it returns a render-ready SVG, PNG, or JPG asset and can optionally trigger a browser download.</p>
+          <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 mt-5 mb-2">Parameters</p>
+          <div class="cite-box">
+            <pre class="code-block">options: {
+  type?: 'text' | 'uri' | 'url' | 'email' | 'phone' | 'sms' | 'contact' | 'vcard' | 'event' | 'wifi' | 'geo';
+  inputs?:
+    | { value: string } // uri or url
+    | { address: string, subject?: string, body?: string }
+    | { number: string }
+    | { number: string, message?: string }
+    | { name?: string, org?: string, phone?: string, email?: string, url?: string, note?: string }
+    | { title?: string, start?: string, end?: string, location?: string, description?: string, allDay?: boolean, timezone?: string }
+    | { ssid: string, encryption?: 'WPA' | 'WEP' | 'nopass', password?: string, hidden?: boolean }
+    | { lat: string, lng: string, query?: string };
+  version?: number;     // 1 through 40, default 2
+  ecc?: 'L' | 'M' | 'Q' | 'H';
+  enableMask?: boolean; // default true
+}
+
+format?: 'svg' | 'png' | 'jpg' | 'jpeg'
+
+renderOptions?: {
+  filename?: string,
+  download?: boolean,       // default false when format is provided
+  cellSize?: number,
+  marginModules?: number,   // default 4
+  foreground?: string,      // CSS color, default #000000
+  background?: string,      // CSS color, default #ffffff
+  quality?: number          // JPG only, default 0.92
+}</pre>
+          </div>
+          <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 mt-5 mb-2">Returns</p>
+          <div class="cite-box">
+            <pre class="code-block">Without format:
+
+{
+  ok: boolean,
+  type: string,
+  inputs:
+    | { value: string } // uri or url
+    | { address: string, subject?: string, body?: string }
+    | { number: string }
+    | { number: string, message?: string }
+    | { name?: string, org?: string, phone?: string, email?: string, url?: string, note?: string }
+    | { title?: string, start?: string, end?: string, location?: string, description?: string, allDay?: boolean, timezone?: string }
+    | { ssid: string, encryption?: 'WPA' | 'WEP' | 'nopass', password?: string, hidden?: boolean }
+    | { lat: string, lng: string, query?: string },
+  version: number,
+  ecc: 'L' | 'M' | 'Q' | 'H',
+  totalBytes: number,
+  dataBytes: number,
+  eccBytes: number,
+  countBits: number,
+  capacityBits: number,
+  payloadInfo: {
+    type: string,
+    typeLabel: string,
+    envelope: string,
+    description: string,
+    scannerRule: string,
+    inputs:
+      | { value: string } // uri or url
+      | { address: string, subject?: string, body?: string }
+      | { number: string }
+      | { number: string, message?: string }
+      | { name?: string, org?: string, phone?: string, email?: string, url?: string, note?: string }
+      | { title?: string, start?: string, end?: string, location?: string, description?: string, allDay?: boolean, timezone?: string }
+      | { ssid: string, encryption?: 'WPA' | 'WEP' | 'nopass', password?: string, hidden?: boolean }
+      | { lat: string, lng: string, query?: string },
+    payload: string
+  },
+  payloadText: string,
+  payloadBytes: Array<{ value: number, char: string, charLabel: string, charIndex: number, byteOffset: number, byteCount: number }>,
+  chars: Array<{ char: string, charLabel: string, bytes: number[], byteStart: number, byteEnd: number }>,
+  bits: Array<{
+    bit: '0' | '1',
+    kind: 'mode' | 'count' | 'payload' | 'terminator' | 'padbits' | 'padcw',
+    summary: string,
+    detail: string,
+    bitNumber: number | null,
+    charIndex?: number,
+    charLabel?: string,
+    byteIndex?: number,
+    byteValue?: number,
+    padValue?: number
+  }>,
+  values: Array<{
+    index: number,
+    key: string,
+    kind: string,
+    label: string,
+    bitStart: number,
+    bitEnd: number,
+    bitLength: number,
+    bits: string,
+    summary: string,
+    detail: string,
+    charIndex: number | null,
+    charLabel: string,
+    byteValues: number[],
+    moduleStartIndex: number,
+    moduleEndIndex: number
+  }>,
+  charMap: Array<{ index: number, char: string, charLabel: string, bytes: number[], bitStart: number, bitEnd: number, moduleStartIndex: number, moduleEndIndex: number }>,
+  dataByteValues: number[],
+  terminatorBits: number,
+  alignBits: number,
+  padByteStart: number,
+  padByteCount: number,
+  payloadBitLength: number,
+  remainder: number,
+  versionInfo: {
+    version: number,
+    size: number,
+    totalModules: number,
+    alignmentPatternCount: number,
+    hasVersionInfo: boolean,
+    totalCodewords: number,
+    dataCodewords: number,
+    eccCodewords: number,
+    remainderBits: number,
+    capacities: {
+      numeric: number,
+      alphanumeric: number,
+      binary: number,
+      kanji: number
+    },
+    eccProfile: {
+      L: number,
+      M: number,
+      Q: number,
+      H: number
+    },
+    rsBlocks: {
+      dataCodewords: number,
+      ecCodewordsPerBlock: number,
+      groups: Array<{ blocks: number, dataCodewords: number }>
+    }
+  },
+  moduleGrid: { size: number, aligns: number[][], grid: number[][] },
+  zigzagPath: Array<{ index: number, r: number, c: number }>,
+  finalQr?: {
+    matrix: boolean[][],
+    moduleCount: number,
+    cellSize: number,
+    maskPattern: number,
+    maskPenalty: number,
+    maskEnabled: boolean,
+    formatInfo: { value: number, bits: string, eccBits: string, maskBits: string, bchBits: string },
+    rsBlocks: Array<{ group: number, index: number, data: number[], ecc: number[] }>,
+    interleavedCodewords: Array<{ index: number, kind: 'data' | 'ecc', block: number, indexInBlock: number, value: number, hex: string }>,
+    placedBits: Array<{ index: number, row: number, col: number, kind: 'data' | 'ecc' | 'remainder', codewordIndex: number | null, block: number | null, indexInBlock: number, bitIndex: number, value: number, byteValue: number, maskedValue: number }>
+  },
+  error?: string,
+  requiredBits?: number,
+  suggestion?: number | null
+}
+
+With format:
+
+Promise&lt;{
+  format: 'svg' | 'png' | 'jpg',
+  filename: string,
+  mimeType: string,
+  blob: Blob,
+  size: number,
+  svg: string
+}&gt;</pre>
+          </div>
+          <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 mt-5 mb-2">Code Snippet</p>
+          <div class="cite-box">
+            <pre class="code-block">const model = QRPeach.Generate({
+  type: 'text',
+  inputs: { value: 'HELLO WORLD' },
+  version: 2,
+  ecc: 'M'
+});
+
+console.log(model.ok);
+console.log(model.finalQr.matrix);
+
+const asset = await QRPeach.Generate({
+  type: 'url',
+  inputs: { value: 'https://example.com' },
+  version: 3,
+  ecc: 'M'
+}, 'svg', { download: false });
+
+console.log(asset.svg);</pre>
+          </div>
+        </article>
+
+        <article class="card">
+          <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 mb-2">Name</p>
+          <h3 class="card-title font-mono">QRPeach.Debug(source, options?)</h3>
+          <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 mt-5 mb-2">Description</p>
+          <p class="card-copy">Returns well-formed JSON debug data. Pass generation options or a generated model to inspect QR construction data, or pass PNG, JPEG, or SVG bytes to run the internal virtual scan used by the encoder debugger.</p>
+          <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 mt-5 mb-2">Parameters</p>
+          <div class="cite-box">
+            <pre class="code-block">source:
+  | Generate options object
+  | Generate model object
+  | Uint8Array
+  | ArrayBuffer
+  | TypedArray
+  | number[]
+
+options?: {
+  mimeType?: 'image/png' | 'image/jpeg' | 'image/svg+xml',
+  type?: 'image/png' | 'image/jpeg' | 'image/svg+xml',
+  sourceLabel?: string
+}</pre>
+          </div>
+          <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 mt-5 mb-2">Returns</p>
+          <div class="cite-box">
+            <pre class="code-block">When source is Generate options or a Generate model:
+
+{
+  ok: boolean,
+  type: string,
+  inputs:
+    | { value: string }
+    | { address: string, subject?: string, body?: string }
+    | { number: string }
+    | { number: string, message?: string }
+    | { name?: string, org?: string, phone?: string, email?: string, url?: string, note?: string }
+    | { ssid: string, encryption?: 'WPA' | 'WEP' | 'nopass', password?: string, hidden?: boolean }
+    | { lat: string, lng: string, query?: string },
+  version: number,
+  ecc: 'L' | 'M' | 'Q' | 'H',
+  payloadInfo: {
+    type: string,
+    typeLabel: string,
+    envelope: string,
+    description: string,
+    scannerRule: string,
+    inputs:
+      | { value: string }
+      | { address: string, subject?: string, body?: string }
+      | { number: string }
+      | { number: string, message?: string }
+      | { name?: string, org?: string, phone?: string, email?: string, url?: string, note?: string }
+      | { ssid: string, encryption?: 'WPA' | 'WEP' | 'nopass', password?: string, hidden?: boolean }
+      | { lat: string, lng: string, query?: string },
+    payload: string
+  },
+  payloadText: string,
+  payloadBytes: Array<{ value: number, char: string, charLabel: string, charIndex: number, byteOffset: number, byteCount: number }>,
+  values: Array<{ index: number, key: string, kind: string, label: string, bitStart: number, bitEnd: number, bitLength: number, bits: string, summary: string, detail: string, charIndex: number | null, charLabel: string, byteValues: number[], moduleStartIndex: number, moduleEndIndex: number }>,
+  charMap: Array<{ index: number, char: string, charLabel: string, bytes: number[], bitStart: number, bitEnd: number, moduleStartIndex: number, moduleEndIndex: number }>,
+  versionInfo: {
+    version: number,
+    size: number,
+    totalModules: number,
+    alignmentPatternCount: number,
+    hasVersionInfo: boolean,
+    totalCodewords: number,
+    dataCodewords: number,
+    eccCodewords: number,
+    remainderBits: number,
+    capacities: { numeric: number, alphanumeric: number, binary: number, kanji: number },
+    eccProfile: { L: number, M: number, Q: number, H: number },
+    rsBlocks: { dataCodewords: number, ecCodewordsPerBlock: number, groups: Array<{ blocks: number, dataCodewords: number }> }
+  },
+  moduleGrid: { size: number, aligns: number[][], grid: number[][] },
+  zigzagPath: Array<{ index: number, r: number, c: number }>,
+  finalQr: {
+    matrix: boolean[][],
+    moduleCount: number,
+    cellSize: number,
+    maskPattern: number,
+    maskPenalty: number,
+    maskEnabled: boolean,
+    formatInfo: { value: number, bits: string, eccBits: string, maskBits: string, bchBits: string },
+    rsBlocks: Array<{ group: number, index: number, data: number[], ecc: number[] }>,
+    interleavedCodewords: Array<{ index: number, kind: 'data' | 'ecc', block: number, indexInBlock: number, value: number, hex: string }>,
+    placedBits: Array<{ index: number, row: number, col: number, kind: 'data' | 'ecc' | 'remainder', codewordIndex: number | null, block: number | null, indexInBlock: number, bitIndex: number, value: number, byteValue: number, maskedValue: number }>
+  },
+  error?: string
+}
+
+When source is PNG, JPEG, or SVG bytes:
+
+{
+  ok: boolean,
+  mimeType: string,
+  byteLength: number,
+  sourceLabel: string,
+  image: {
+    width: number,
+    height: number,
+    isSquare: boolean,
+    threshold: number,
+    darkPixelRatio: number,
+    contrast: number,
+    bounds: { left: number, top: number, right: number, bottom: number, width: number, height: number } | null,
+    quietZone: { left: number, top: number, right: number, bottom: number } | null,
+    modulePitch?: { x: number, y: number },
+    quietZoneModules?: { left: number, top: number, right: number, bottom: number },
+    moduleCount?: number
+  } | null,
+  engine: {
+    name: string,
+    externalDependencies: boolean
+  },
+  decodedText: string,
+  symbol: {
+    version: number,
+    moduleCount: number,
+    eccLevel: 'L' | 'M' | 'Q' | 'H',
+    maskPattern: number,
+    formatInfo: {
+      level: 'L' | 'M' | 'Q' | 'H',
+      maskPattern: number,
+      value: number,
+      bits: string,
+      copyA: { value: number, bits: string, errorBits: number },
+      copyB: { value: number, bits: string, errorBits: number }
+    },
+    versionInfo: {
+      version: number,
+      value: number,
+      bits: string,
+      copyA: { value: number, bits: string, errorBits: number },
+      copyB: { value: number, bits: string, errorBits: number }
+    } | null,
+    bitCounts: {
+      data: number,
+      ecc: number,
+      remainder: number
+    },
+    bitstreams: {
+      metadata: string,
+      format: string,
+      version: string,
+      data: string,
+      ecc: string,
+      remainder: string
+    },
+    codewords: {
+      data: Array<{ index: number, bits: string, value: number, hex: string }>,
+      ecc: Array<{ index: number, bits: string, value: number, hex: string }>
+    },
+    byteMode: {
+      modeBits: string,
+      countBits: string,
+      byteCount: number,
+      payloadBits: string,
+      payloadBytes: number[],
+      terminatorBits: string,
+      alignBits: string,
+      padCodewords: Array<{ index: number, bits: string, value: number, hex: string }>
+    }
+  } | null,
+  issues: Array<{ severity: 'warning' | 'error', code: string, message: string, detail: string }>
+}</pre>
+          </div>
+          <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 mt-5 mb-2">Code Snippet</p>
+          <div class="cite-box">
+            <pre class="code-block">const model = QRPeach.Generate({
+  type: 'wifi',
+  inputs: {
+    ssid: 'Cafe WiFi',
+    encryption: 'WPA',
+    password: 'secret123',
+    hidden: false
+  },
+  version: 4,
+  ecc: 'M'
+});
+
+const generationDebug = await QRPeach.Debug(model);
+console.log(generationDebug.values.length);
+
+const bytes = new TextEncoder().encode((await QRPeach.Generate({
+  type: 'text',
+  inputs: { value: 'HELLO WORLD' },
+  version: 2,
+  ecc: 'M'
+}, 'svg')).svg);
+
+const scanDebug = await QRPeach.Debug(bytes, {
+  mimeType: 'image/svg+xml',
+  sourceLabel: 'Generated SVG'
+});
+
+console.log(scanDebug.ok, scanDebug.symbol && scanDebug.symbol.version);</pre>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+  </footer>
+
+  <script src="assets/js/site-nav.js"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

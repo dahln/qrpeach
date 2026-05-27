@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QR Peach – Learn</title>
+  <meta name="description" content="Learn how QR codes work: symbol structure, payload envelopes, codewords, ECC, masking, and capacity tradeoffs." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="assets/js/tailwind-config.js"></script>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="stylesheet" href="assets/css/site.css" />
+  <style>
+    .anat-card {
+      background: rgba(255, 255, 255, 0.86);
+      border: 1px solid rgba(226, 232, 240, 0.95);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .fmt-sub {
+      margin: 18px 0 8px;
+      font-size: 0.73rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #c2410c;
+    }
+
+    .anat-copy {
+      font-size: 0.93rem;
+      line-height: 1.85;
+      color: var(--ink-700);
+      margin: 0;
+      max-width: 74ch;
+    }
+
+    .anat-list {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 0.9rem;
+      line-height: 1.8;
+      color: var(--ink-700);
+    }
+
+    .ratio-strip,
+    .bitstream-bar,
+    .ver-grid,
+    .fmt-bitstrip {
+      display: grid;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .ratio-strip {
+      grid-template-columns: 1fr 1fr 3fr 1fr 1fr;
+      max-width: 420px;
+    }
+
+    .ratio-cell,
+    .ver-cell {
+      border-radius: 10px;
+      padding: 10px 8px;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .bitstream-bar {
+      grid-template-columns: 4fr 6fr 16fr 3fr 3fr 5fr 10fr 2fr;
+      align-items: stretch;
+    }
+
+    .stream-cell {
+      border-radius: 12px;
+      padding: 10px 6px;
+      text-align: center;
+      font-size: 0.72rem;
+      line-height: 1.35;
+      font-weight: 700;
+    }
+
+    .ver-grid.cols-3 {
+      grid-template-columns: repeat(3, 36px);
+      width: max-content;
+    }
+
+    .ver-grid.cols-6 {
+      grid-template-columns: repeat(6, 36px);
+      width: max-content;
+    }
+
+    .fmt-bitstrip {
+      grid-template-columns: repeat(15, minmax(28px, 1fr));
+      max-width: 100%;
+      align-items: stretch;
+    }
+
+    .ver-cell {
+      background: #eef2ff;
+      color: #4338ca;
+      border: 1px solid #c7d2fe;
+    }
+
+    .fmt-bit {
+      border-radius: 10px;
+      padding: 10px 4px;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.73rem;
+      font-weight: 700;
+      border: 1px solid #e2e8f0;
+      background: #fff;
+      color: #334155;
+    }
+
+    .fmt-bit.ecc {
+      background: #fee2e2;
+      border-color: #fca5a5;
+      color: #b91c1c;
+    }
+
+    .fmt-bit.mask {
+      background: #ffedd5;
+      border-color: #fdba74;
+      color: #c2410c;
+    }
+
+    .fmt-bit.bch {
+      background: #eef2ff;
+      border-color: #c7d2fe;
+      color: #4338ca;
+    }
+
+    .fmt-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 14px;
+      margin-top: 12px;
+      font-size: 0.82rem;
+      color: #475569;
+    }
+
+    .fmt-legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .fmt-legend-chip {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      display: inline-block;
+      border: 1px solid transparent;
+    }
+
+    .code-panel {
+      margin-top: 10px;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      background: #f8fafc;
+      padding: 14px 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.77rem;
+      line-height: 1.7;
+      color: #334155;
+      white-space: pre;
+      overflow-x: auto;
+    }
+
+    .hero-grid > *,
+    .metric-grid > *,
+    .section-stack > *,
+    .grid > * {
+      min-width: 0;
+    }
+
+    .bridge-note {
+      border-radius: 20px;
+      border: 1px solid #e2e8f0;
+      background: #fff;
+      padding: 16px 18px;
+    }
+
+    .bridge-note p {
+      margin: 0;
+      font-size: 0.88rem;
+      line-height: 1.75;
+      color: #475569;
+    }
+
+    .bridge-note {
+      border-left: 4px solid #fb923c;
+      background: #fff7ed;
+    }
+
+    .bridge-note strong {
+      color: #9a3412;
+    }
+
+    @media (max-width: 900px) {
+      .bitstream-bar {
+        grid-template-columns: 4fr 6fr 16fr 3fr 3fr 5fr 10fr 2fr;
+        gap: 4px;
+      }
+
+      .stream-cell {
+        font-size: 0.64rem;
+        padding: 8px 4px;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .anat-card,
+      .card {
+        padding: 20px;
+      }
+
+      .cta-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .cta-row a {
+        justify-content: center;
+      }
+
+      .metric-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .ratio-strip {
+        max-width: 100%;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+
+      .ratio-cell,
+      .ver-cell,
+      .stream-cell {
+        font-size: 0.68rem;
+        padding: 8px 6px;
+      }
+
+      .bitstream-bar {
+        grid-template-columns: 4fr 6fr 16fr 3fr 3fr 5fr 10fr 2fr;
+        gap: 3px;
+      }
+
+      .stream-cell {
+        font-size: 0.56rem;
+        line-height: 1.2;
+        padding: 8px 2px;
+      }
+
+      .code-panel {
+        font-size: 0.72rem;
+      }
+
+      .overflow-auto .anno-table {
+        width: max-content;
+        min-width: 100%;
+      }
+
+      .overflow-auto .anno-table th,
+      .overflow-auto .anno-table td {
+        min-width: 7.5rem;
+        vertical-align: top;
+      }
+
+      .overflow-auto .anno-table th:first-child,
+      .overflow-auto .anno-table td:first-child {
+        min-width: 5.5rem;
+      }
+
+      .overflow-auto .anno-table th:last-child,
+      .overflow-auto .anno-table td:last-child {
+        min-width: 12rem;
+      }
+
+      .fmt-bitstrip {
+        grid-template-columns: repeat(15, minmax(0, 1fr));
+        gap: 4px;
+      }
+
+      .fmt-bit {
+        font-size: 0.58rem;
+        padding: 8px 1px;
+      }
+    }
+  </style>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a class="brand-lockup" href="index.html">
+        <span class="brand-mark"><img src="assets/peach.svg" alt="" /></span>
+        <span>
+          <span class="brand-name">QR Peach</span>
+          <span class="brand-tag">Open QR reference and encoder</span>
+        </span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Toggle navigation" data-nav-toggle>
+        <span class="sr-only">Toggle navigation</span>
+        <span class="nav-toggle-box" aria-hidden="true">
+          <span class="nav-toggle-line"></span>
+          <span class="nav-toggle-line"></span>
+          <span class="nav-toggle-line"></span>
+        </span>
+      </button>
+      <nav class="site-nav" id="site-nav">
+        <a class="nav-link" href="index.html">Home</a>
+        <a class="nav-link active" href="learn.html">Learn</a>
+        <a class="nav-link" href="encoder.html">Encoder</a>
+        <a class="nav-link" href="sources.html">Sources</a>
+        <a class="nav-link" href="download.html">Download</a>
+        <a class="nav-link" href="https://github.com/dahln/QRPeach" target="_blank" rel="noreferrer" aria-label="GitHub"><i data-lucide="github" class="w-4 h-4"></i></a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-shell section-stack">
+    <section class="page-hero">
+      <div class="hero-kicker"><i data-lucide="layers-3" class="w-4 h-4"></i> QR structure, fully mapped</div>
+      <div class="mt-6">
+        <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-5">Learn: QR Code Structure Guide</h1>
+        <p class="text-lg text-slate-200 leading-8 max-w-2xl">This page maps the QR symbol in detail, where <strong>symbol</strong> means the complete square QR code as a whole: not just the names of QR regions, but the exact placement logic, bit layouts, redundancy rules, and traversal behavior that make the symbol decodable in the real world.</p>
+        <div class="cta-row">
+          <a class="button-primary" href="encoder.html"><i data-lucide="scan-search" class="w-4 h-4"></i> Open Encoder</a>
+          <a class="button-secondary" href="sources.html"><i data-lucide="book-open-text" class="w-4 h-4"></i> See Sources</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 class="section-heading text-2xl font-bold mb-2">Start Here: What a QR Code Actually Is</h2>
+      <p class="section-intro">This guide assumes zero background. A QR code is just a square grid of tiny dark and light cells called modules. Some modules are fixed landmarks that help a camera orient itself. The remaining modules store a message and the redundancy needed to recover that message if part of the symbol is damaged.</p>
+      <ol class="anat-list mt-4">
+        <li><strong>A QR code is a grid:</strong> the smallest standard QR symbol is version 1, which is 21 by 21 modules. Larger versions add 4 modules in width and height each time.</li>
+        <li><strong>Some parts never hold your message:</strong> finder, timing, alignment, format, and sometimes version information are structural patterns. Collectively these reserved structural regions are called <strong>function patterns</strong>: fixed parts of the symbol that help scanners locate and decode it, rather than carrying normal message data.</li>
+        <li><strong>Your message becomes bits:</strong> the text or scanner-style payload is converted into bytes, grouped into codewords, protected with Reed-Solomon error correction, and then placed into the open modules.</li>
+        <li><strong>The final pattern is intentionally scrambled:</strong> a <strong>mask pattern</strong> is one of eight fixed rules that flips selected data modules. <strong>Masking</strong> means applying that rule so the symbol avoids misleading stripes or blocks that are harder for scanners to read.</li>
+      </ol>
+      <div class="bridge-note mt-4">
+        <p><strong>One-sentence mental model:</strong> a QR code is a carefully structured square where fixed landmarks help the camera, while the open space holds your message plus enough redundancy to survive damage.</p>
+      </div>
+      <ul class="anat-list mt-4">
+        <li><strong>Module:</strong> a single dark or light square in the grid.</li>
+        <li><strong>Payload:</strong> the actual message string the QR code is meant to carry.</li>
+        <li><strong>Version:</strong> the symbol size. Version 1 is 21x21, version 40 is 177x177.</li>
+        <li><strong>Codeword:</strong> an 8-bit byte-sized chunk in the encoded QR bitstream.</li>
+        <li><strong>ECC:</strong> error correction codewords that let scanners recover missing or damaged data.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+        <h2 class="section-heading text-2xl font-bold mb-2">A Tiny Example Before the Heavy Details</h2>
+        <p class="section-intro">Keep this beginner example in mind as you read the rest of the page. Every advanced section is explaining one part of this same journey. In QR terms, a <strong>mode</strong> is the rule that tells the decoder how to interpret the payload, and the <strong>mode indicator</strong> is the small field that stores that rule at the start of the data stream. <strong>UTF-8</strong> is the text-to-bytes encoding rule that turns text into byte values, and <strong>byte mode</strong> is the QR mode for general byte data, which is why QR Peach uses it for normal text payloads.</p>
+        <ol class="anat-list mt-4">
+          <li><strong>Input:</strong> <span class="font-mono">HELLO</span></li>
+          <li><strong>Payload:</strong> <span class="font-mono">HELLO</span></li>
+          <li><strong>Bytes:</strong> UTF-8 gives <span class="font-mono">48 45 4C 4C 4F</span></li>
+          <li><strong>Header:</strong> byte mode adds <span class="font-mono">0100 + 00000101</span></li>
+          <li><strong>Result:</strong> fixed patterns + data codewords + ECC codewords + mask.</li>
+        </ol>
+        <div class="code-panel">HELLO in a small byte-mode QR example
+
+mode indicator      0100
+byte count (5)      00000101
+H                   01001000
+E                   01000101
+L                   01001100
+L                   01001100
+O                   01001111
+
+...then terminator bits, pad bits, pad codewords, error correction, and placement into modules.</div>
+      
+    </section>
+
+    <section class="card" id="payload-types" style="scroll-margin-top:96px;">
+      <h2 class="section-heading text-2xl font-bold mb-2">Payload Types: Start with Plain Text, Then Add Scanner Conventions</h2>
+      <p class="section-intro">Beginners often assume a QR code has separate low-level structures for links, email, Wi-Fi, and contacts. Usually it does not. Most of the time, the QR symbol still stores a plain byte stream. The scanner decides how to act based on the string pattern inside that stream.</p>
+      <ul class="anat-list mt-4">
+        <li><strong>Plain text:</strong> a payload like <span class="font-mono">HELLO WORLD</span> has no special prefix, so readers simply show the decoded text.</li>
+        <li><strong>Generic URI:</strong> a payload like <span class="font-mono">sip:ada@example.com</span> still uses byte encoding, but scanners can hand the scheme to an app that understands it.</li>
+        <li><strong>Web link:</strong> a payload like <span class="font-mono">https://example.com</span> still uses byte encoding, but scanners recognize URI syntax and offer to open it.</li>
+        <li><strong>Email or phone:</strong> prefixes like <span class="font-mono">mailto:</span> and <span class="font-mono">tel:</span> are just part of the payload text. They tell the scanner which app action to launch.</li>
+        <li><strong>Wi-Fi, contact card, or event:</strong> structured strings such as <span class="font-mono">WIFI:</span>, <span class="font-mono">MECARD:</span>, <span class="font-mono">BEGIN:VCARD</span>, or <span class="font-mono">BEGIN:VCALENDAR</span> package multiple fields into one byte stream.</li>
+      </ul>
+      <div class="mt-5 rounded-3xl bg-slate-50 border border-slate-200 p-5 text-sm text-slate-600 leading-7">
+        <strong class="text-slate-900">Generic URI vs URL:</strong> a URL is a web-focused URI such as <span class="font-mono">https://example.com</span>. Use <strong>URL</strong> when the payload is a normal web address. Use <strong>Generic URI</strong> when the payload uses another scheme such as <span class="font-mono">sip:</span>, <span class="font-mono">otpauth:</span>, <span class="font-mono">bitcoin:</span>, or an app-specific deep link.
+      </div>
+      <div class="mt-5 overflow-auto">
+        <table class="anno-table text-sm w-full">
+          <thead>
+            <tr><th>Type</th><th>Envelope Example</th><th>How Scanners Interpret It</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Text</td><td class="font-mono">HELLO WORLD</td><td>No special prefix. The decoded text is displayed directly.</td></tr>
+            <tr><td>Generic URI</td><td class="font-mono">sip:ada@example.com</td><td>Readers pass the scheme to an app that recognizes that URI type.</td></tr>
+            <tr><td>URL</td><td class="font-mono">https://example.com</td><td>Readers see URI syntax and offer to open the link.</td></tr>
+            <tr><td>Email</td><td class="font-mono">mailto:ada@example.com?subject=Hello</td><td>The <span class="font-mono">mailto:</span> prefix triggers compose-email behavior.</td></tr>
+            <tr><td>Phone</td><td class="font-mono">tel:+15551234567</td><td>The <span class="font-mono">tel:</span> prefix triggers dial behavior.</td></tr>
+            <tr><td>SMS</td><td class="font-mono">SMSTO:+15551234567:Hello</td><td>Readers treat the envelope as a pre-filled text message.</td></tr>
+            <tr><td>Contact</td><td class="font-mono">MECARD:N:Ada Lovelace;TEL:...;</td><td>Readers parse the structured contact payload and offer to save it.</td></tr>
+            <tr><td>vCard</td><td class="font-mono">BEGIN:VCARD\nVERSION:3.0\nFN:Ada Lovelace\n...</td><td>Readers parse the vCard record and offer to import the contact details.</td></tr>
+            <tr><td>Event</td><td class="font-mono">BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nDTSTART;TZID=America/New_York:20260601T090000\n...</td><td>Readers parse the iCalendar event record and offer to add it to a calendar.</td></tr>
+            <tr><td>Wi-Fi</td><td class="font-mono">WIFI:T:WPA;S:Cafe WiFi;P:secret123;;</td><td>Readers recognize the Wi-Fi envelope and offer network setup.</td></tr>
+            <tr><td>Geo</td><td class="font-mono">geo:37.7749,-122.4194?q=Coffee</td><td>Readers pass the coordinates into a map flow.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="mt-5 rounded-3xl bg-[#fff7f1] border border-orange-200 p-5 text-sm text-slate-600 leading-7">
+        <strong class="text-slate-900">Important distinction:</strong> these are payload conventions, not alternate low-level QR symbol structures. QR Peach serializes these envelopes into UTF-8 byte-mode payloads for visualization. Calendar payloads can use <span class="font-mono">DTSTART;VALUE=DATE</span> for all-day events or <span class="font-mono">DTSTART;TZID=...</span> for local timed events.
+      </div>
+    </section>
+
+    <section class="anat-card" id="decoder-image-analysis" style="scroll-margin-top:96px;">
+      <div class="flex items-center gap-2 mb-2"><span class="path-swatch" style="background:#94a3b8"></span><h2 class="text-2xl font-bold text-navy-900 m-0">From Pixels to Modules: How a Decoder Starts</h2></div>
+      <p class="anat-copy">A <strong>module</strong> is one square cell in the QR grid: the smallest black-or-white unit the symbol is built from. So yes, visually it is one little square. In the data region, a module usually carries one written bit after masking, but many modules in a QR code are not payload bits at all. Finder patterns, timing patterns, alignment patterns, format information, version information, separators, and the dark module are all made of modules too, but they serve structural jobs instead of carrying message content.</p>
+      <div class="fmt-sub" id="decoder-pipeline" style="scroll-margin-top:96px;">Decoder Pipeline</div>
+      <p class="anat-copy">Before a decoder can talk about payload bytes, ECC bytes, or format bits, it has to complete a more basic job: turn an image into a clean QR module grid. In practice that means decoding the image file, locating the symbol, estimating the grid geometry, sampling each module, reading the format and version metadata, undoing the mask, and only then reconstructing codewords.</p>
+      <p class="anat-copy" style="margin-top:12px;">That is why debugging rows about image dimensions, quiet zone, contrast, and module pitch are not cosmetic. They describe the evidence the decoder had available before payload parsing could even begin.</p>
+      <div class="fmt-sub" id="decoder-image-source" style="scroll-margin-top:96px;">Source Bytes and Raster Size</div>
+      <p class="anat-copy">A QR image starts as some encoded file bytes: PNG, JPEG, SVG, or another image format. The decoder first interprets that file and turns it into a <strong>raster</strong> image, meaning a rectangular pixel grid with a width and height in pixels. File byte length and pixel dimensions are related but not interchangeable. A tiny SVG can scale into a large crisp raster, while a large JPEG can still decode into a blurry image with weak module edges.</p>
+      <div class="fmt-sub" id="decoder-contrast-threshold" style="scroll-margin-top:96px;">Contrast and Thresholding</div>
+      <p class="anat-copy">After decoding the file, the scanner has to decide which pixels count as dark modules and which count as light background. That step depends on contrast. <strong>Thresholding</strong> is the step where the decoder draws that dark-versus-light boundary. If dark modules are not dark enough, or the background is not bright enough, thresholding becomes unstable and the recovered grid can drift or fragment before payload decoding even starts.</p>
+      <div class="fmt-sub" id="decoder-module-pitch" style="scroll-margin-top:96px;">Module Pitch</div>
+      <p class="anat-copy">Module pitch is the estimated pixel width and height of one QR module in the recovered image. A healthy scan usually has enough pixels per module to distinguish dark and light cells cleanly. If pitch is too small, compression and resampling can blur neighboring modules together. If horizontal and vertical pitch differ too much, that often hints at distortion, cropping, or perspective issues.</p>
+      <div class="fmt-sub" id="decoder-quiet-zone" style="scroll-margin-top:96px;">Quiet Zone as a Scanning Requirement</div>
+      <p class="anat-copy">The quiet zone is the blank margin around the QR symbol. Beginners often think of it as wasted space, but decoders use it to separate the symbol from nearby graphics, text, or borders. If the dark region nearly touches the image edge, the scanner may misread the symbol boundary or fail to detect the finder structure cleanly at all.</p>
+    </section>
+
+    <section class="anat-card">
+      <div class="bridge-note mb-5">
+        <p><strong>Next idea:</strong> before a scanner can read any of those payloads, it must first find the symbol, determine orientation, estimate the grid, and compensate for distortion. That is what the fixed landmark patterns are for.</p>
+      </div>
+      <div class="flex items-center gap-2 mb-2"><span class="path-swatch" style="background:#1e293b"></span><h2 class="text-2xl font-bold text-navy-900 m-0">Finder Patterns</h2></div>
+      <div class="fmt-sub">Purpose</div>
+      <p class="anat-copy">Three identical 7x7 concentric square patterns placed at the top-left, top-right, and bottom-left corners of every QR symbol. They allow any scanner to detect that a QR code is present, determine the symbol orientation, and establish the module-grid coordinate system before any data is read.</p>
+      <div class="fmt-sub">Why Three, Not Four?</div>
+      <p class="anat-copy">Three finder patterns create a unique L-shaped arrangement. Any three squares in those positions unambiguously define position and orientation; the missing fourth corner tells the decoder which way is up. A fourth pattern would create 180-degree rotational ambiguity.</p>
+      <div class="fmt-sub">Internal Structure</div>
+      <p class="anat-copy">Each finder pattern is a 7x7 grid with three concentric layers.</p>
+      <ul class="anat-list mt-3">
+        <li><strong>Layer 1:</strong> 7x7 dark outer border</li>
+        <li><strong>Layer 2:</strong> 5x5 light ring</li>
+        <li><strong>Layer 3:</strong> 3x3 dark center block</li>
+      </ul>
+      <div class="fmt-sub">The 1:1:3:1:1 Ratio Rule</div>
+      <p class="anat-copy">Any horizontal or vertical scan line crossing a finder pattern produces dark:light:dark:light:dark module widths in the ratio 1:1:3:1:1. This ratio is what scanners search for, and it survives changes in scale, angle, and rotation.</p>
+      <div class="ratio-strip">
+        <div class="ratio-cell" style="background:#1e293b;color:#fff">1</div>
+        <div class="ratio-cell" style="background:#f8fafc;color:#334155;border:1px solid #cbd5e1">1</div>
+        <div class="ratio-cell" style="background:#1e293b;color:#fff">3</div>
+        <div class="ratio-cell" style="background:#f8fafc;color:#334155;border:1px solid #cbd5e1">1</div>
+        <div class="ratio-cell" style="background:#1e293b;color:#fff">1</div>
+      </div>
+      <div class="fmt-sub">Separator</div>
+      <p class="anat-copy">Each finder pattern is surrounded by a 1-module-wide white separator on the sides facing the interior of the symbol. This prevents the finder from visually merging with nearby data modules. Separators are always white regardless of masking.</p>
+      <div class="fmt-sub">Placement Coordinates</div>
+      <div class="overflow-auto mt-2">
+        <table class="anno-table text-sm w-full">
+          <thead><tr><th>Pattern</th><th>Top-left Corner</th><th>Row Range</th><th>Column Range</th></tr></thead>
+          <tbody>
+            <tr><td>Top-left</td><td class="font-mono">(0, 0)</td><td>0-6</td><td>0-6</td></tr>
+            <tr><td>Top-right</td><td class="font-mono">(0, size-7)</td><td>0-6</td><td>size-7 to size-1</td></tr>
+            <tr><td>Bottom-left</td><td class="font-mono">(size-7, 0)</td><td>size-7 to size-1</td><td>0-6</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="fmt-sub" id="finder-quiet-zone" style="scroll-margin-top:96px;">Quiet Zone</div>
+      <p class="anat-copy">Beyond the required 4-module quiet zone outside the symbol boundary, the internal separators act as an internal quiet buffer that keeps the finder patterns distinguishable from nearby data modules.</p>
+    </section>
+
+    <section class="anat-card">
+      <div class="flex items-center gap-2 mb-2"><span class="path-swatch" style="background:#f59e0b"></span><h2 class="text-2xl font-bold text-navy-900 m-0">Timing Patterns</h2></div>
+      <div class="fmt-sub">Purpose</div>
+      <p class="anat-copy">Two alternating dark/light strips, one horizontal and one vertical, let the scanner determine module-grid density and compensate for perspective distortion or skew in the captured image.</p>
+      <div class="fmt-sub">Placement</div>
+      <ul class="anat-list">
+        <li>Horizontal timing: row 6, columns 8 through size-9.</li>
+        <li>Vertical timing: column 6, rows 8 through size-9.</li>
+      </ul>
+      <div class="fmt-sub">Pattern</div>
+      <p class="anat-copy">The first module of each timing strip is always dark. After that, the strip alternates dark, light, dark, light, and so on. The strip length is size-16 modules.</p>
+      <div class="fmt-sub">Why Row and Column 6?</div>
+      <p class="anat-copy">Row 6 and column 6 are fixed across all 40 versions. Because they sit between the finder patterns, scanners know exactly where to look before they know anything version-specific about the symbol.</p>
+      <div class="fmt-sub">Length by Version</div>
+      <div class="overflow-auto mt-2">
+        <table class="anno-table text-sm w-full">
+          <thead><tr><th>Version</th><th>Symbol Size</th><th>Timing Strip Length</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td class="font-mono">21x21</td><td>5 modules</td></tr>
+            <tr><td>5</td><td class="font-mono">37x37</td><td>21 modules</td></tr>
+            <tr><td>10</td><td class="font-mono">57x57</td><td>41 modules</td></tr>
+            <tr><td>20</td><td class="font-mono">97x97</td><td>81 modules</td></tr>
+            <tr><td>40</td><td class="font-mono">177x177</td><td>161 modules</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="fmt-sub">Distortion Compensation</div>
+      <p class="anat-copy">When a QR code is photographed at an angle, modules appear warped. By counting transitions along both timing strips, the decoder can estimate the perspective transform and realign the grid before reading payload data.</p>
+    </section>
+
+    <section class="anat-card">
+      <div class="flex items-center gap-2 mb-2"><span class="path-swatch" style="background:#10b981"></span><h2 class="text-2xl font-bold text-navy-900 m-0">Alignment Patterns</h2></div>
+      <div class="fmt-sub">Purpose</div>
+      <p class="anat-copy">Small 5x5 concentric patterns placed throughout the data region of larger QR codes. They provide extra reference points for correcting warping and local distortion across the full symbol.</p>
+      <div class="fmt-sub">Structure</div>
+      <ul class="anat-list mt-3">
+        <li><strong>Border:</strong> 5x5 dark outer ring</li>
+        <li><strong>Inner Ring:</strong> 3x3 light ring</li>
+        <li><strong>Center:</strong> 1x1 dark module</li>
+      </ul>
+      <div class="fmt-sub">Version Dependency</div>
+      <ul class="anat-list">
+        <li>Version 1: no alignment patterns.</li>
+        <li>Version 2 and above: at least one alignment pattern, with count increasing by version.</li>
+        <li>Maximum: Version 40 uses 46 alignment patterns.</li>
+      </ul>
+      <div class="fmt-sub">Center Coordinate Lists</div>
+      <p class="anat-copy">The specification defines a list of center coordinates for each version. All combinations of (row, col) from that list are used as alignment centers, except any that would overlap a finder pattern or its separator.</p>
+      <div class="overflow-auto mt-2">
+        <table class="anno-table text-sm w-full">
+          <thead><tr><th>Version</th><th>Center List</th><th>Pattern Count</th></tr></thead>
+          <tbody>
+            <tr><td>2</td><td class="font-mono">[6, 18]</td><td>1</td></tr>
+            <tr><td>7</td><td class="font-mono">[6, 22, 38]</td><td>5</td></tr>
+            <tr><td>14</td><td class="font-mono">[6, 26, 46, 66]</td><td>12</td></tr>
+            <tr><td>21</td><td class="font-mono">[6, 28, 50, 72, 94]</td><td>21</td></tr>
+            <tr><td>40</td><td class="font-mono">[6, 30, 58, 86, 114, 142, 170]</td><td>46</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="fmt-sub">Overlap Rules</div>
+      <p class="anat-copy">If a computed center would place a 5x5 alignment pattern inside a finder corner region, that center pair is skipped. That is why the number of patterns is always lower than the raw square of the center-list length.</p>
+      <div class="fmt-sub">Why They Help</div>
+      <p class="anat-copy">Large QR symbols can accumulate noticeable lens distortion and paper warping by the time the scanner reaches the middle of the code. Alignment patterns let the scanner continuously recalibrate instead of trusting a single global transform.</p>
+    </section>
+
+    <section class="anat-card" id="bitstream-structure" style="scroll-margin-top:96px;">
+      <div class="flex items-center gap-2 mb-2"><span class="path-swatch" style="background:#dbeafe"></span><h2 class="text-2xl font-bold text-navy-900 m-0">From Message to Bitstream: What the Data Region Ultimately Holds</h2></div>
+      <div class="fmt-sub">What Is the Data Region?</div>
+      <p class="anat-copy">Every module that is not part of a function pattern - finder, separator, timing, alignment, format information, version information, or the dark module - is part of the data region. These modules carry the full payload stream: mode indicator, character count, encoded data, error correction, and remainder bits.</p>
+      <div class="fmt-sub" id="bitstream-composition" style="scroll-margin-top:96px;">Composition of the Data Bitstream</div>
+      <p class="anat-copy">Before placement, the final bitstream follows a fixed structure. Beginners should read it left to right as: what mode am I in, how long is the payload, what are the payload bits, and what extra bits are needed to finish the QR structure cleanly and safely. A <strong>terminator</strong> is the short end marker that says the payload is over. <strong>Pad bits</strong> are zero bits added only to reach the next byte boundary. <strong>Pad codewords</strong> are full filler bytes added after that if the symbol still has unused data capacity.</p>
+      <div class="bitstream-bar">
+        <div class="stream-cell" style="background:#3b82f6;color:#fff">Mode<br><span style="font-size:10px;opacity:0.72">4 bits</span></div>
+        <div class="stream-cell" style="background:#2563eb;color:#fff">Char Count<br><span style="font-size:10px;opacity:0.72">variable</span></div>
+        <div class="stream-cell" style="background:#1d4ed8;color:#fff">Encoded Data<br><span style="font-size:10px;opacity:0.72">variable</span></div>
+        <div class="stream-cell" style="background:#64748b;color:#fff">Terminator<br><span style="font-size:10px;opacity:0.72">up to 4b</span></div>
+        <div class="stream-cell" style="background:#94a3b8;color:#fff">Pad Bits</div>
+        <div class="stream-cell" style="background:#cbd5e1;color:#334155">Pad CW<br><span style="font-size:10px;opacity:0.72">EC / 11</span></div>
+        <div class="stream-cell" style="background:#ef4444;color:#fff">ECC<br><span style="font-size:10px;opacity:0.72">RS bytes</span></div>
+        <div class="stream-cell" style="background:#a855f7;color:#fff">Rem<br><span style="font-size:10px;opacity:0.72">0-7b</span></div>
+      </div>
+      <ol class="anat-list mt-4">
+        <li><strong>Mode Indicator:</strong> <span class="font-mono">0001</span> numeric, <span class="font-mono">0010</span> alphanumeric, <span class="font-mono">0100</span> byte, <span class="font-mono">1000</span> Kanji</li>
+        <li><strong>Character Count:</strong> variable length by version range and mode</li>
+        <li><strong>Encoded Data:</strong> the actual payload bits</li>
+        <li><strong>Closure:</strong> terminator, byte padding, pad codewords, ECC, then remainder bits</li>
+      </ol>
+      <div class="fmt-sub">Beginner Example: HELLO in Byte Mode</div>
+      <p class="anat-copy">For a short byte-mode example in versions 1 through 9, the character count field is 8 bits long. That means the encoder writes the 4-bit byte-mode marker, then an 8-bit byte count, then the UTF-8 bytes for each character.</p>
+      <div class="code-panel">HELLO example bitstream start
+
+mode            0100
+count (5)       00000101
+H               01001000
+E               01000101
+L               01001100
+L               01001100
+O               01001111</div>
+      <div class="fmt-sub">Block Structure and Interleaving</div>
+      <p class="anat-copy">For most versions, data is split across multiple Reed-Solomon blocks before ECC is computed. The final stream interleaves data blocks first, then ECC blocks, then appends any remainder bits. That spreads local damage across many blocks instead of destroying one block completely.</p>
+      <ul class="anat-list">
+        <li>Arrange all data blocks side by side.</li>
+        <li>Interleave codeword 1 from block 1, block 2, block 3, and so on.</li>
+        <li>Repeat for codeword 2, codeword 3, and the rest of the data codewords.</li>
+        <li>Then interleave ECC codewords the same way.</li>
+        <li>Append any remainder bits at the very end.</li>
+      </ul>
+      <div class="fmt-sub">Data Module Count by Version</div>
+      <div class="overflow-auto mt-2">
+        <table class="anno-table text-sm w-full">
+          <thead><tr><th>Version</th><th>Size</th><th>Total Modules</th><th>Function Pattern Modules</th><th>Data Modules</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td class="font-mono">21x21</td><td>441</td><td>202</td><td>208 (= 26 CW x 8)</td></tr>
+            <tr><td>7</td><td class="font-mono">45x45</td><td>2,025</td><td>393</td><td>1,568 (= 196 CW x 8)</td></tr>
+            <tr><td>20</td><td class="font-mono">97x97</td><td>9,409</td><td>1,265</td><td>8,324 (= 1040 CW x 8 + 4 rem)</td></tr>
+            <tr><td>40</td><td class="font-mono">177x177</td><td>31,329</td><td>2,677</td><td>29,648 (= 3706 CW x 8)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="anat-card" id="remainder-bits" style="scroll-margin-top:96px;">
+      <div class="flex items-center gap-2 mb-2"><span class="path-swatch" style="background:#a855f7"></span><h2 class="text-2xl font-bold text-navy-900 m-0">Remainder Bits</h2></div>
+      <div class="fmt-sub">What They Are</div>
+      <p class="anat-copy">Remainder bits are the final leftover data-region modules that remain after every data codeword and every ECC codeword has already been assigned. They are <strong>not</strong> payload bits, <strong>not</strong> padding codewords, and <strong>not</strong> error-correction bytes. They are simply extra module positions that exist because the usable data-region area of some QR versions is not an exact multiple of 8 bits.</p>
+      <div class="fmt-sub">Why They Exist</div>
+      <p class="anat-copy">QR encoding works in bytes for data and ECC codewords, but the matrix is a grid of individual modules. After the function patterns are reserved, the remaining writable modules sometimes total a count like <span class="font-mono">8n + 3</span>, <span class="font-mono">8n + 4</span>, or <span class="font-mono">8n + 7</span>. The QR specification still defines codeword capacity in whole bytes, so those extra 3, 4, or 7 modules cannot become another codeword. They are filled with zero-valued remainder bits instead.</p>
+      <div class="code-panel">remainder-bit count for a version
+
+usable data modules        modules not reserved for function patterns
+total codeword bits        8 * total codewords for that version
+
+remainder bits             usable data modules - total codeword bits</div>
+      <p class="anat-copy">That last subtraction is the whole idea. If a version has exactly enough writable modules for whole bytes, the remainder-bit count is zero. If it has a few extra modules beyond the byte-aligned codeword capacity, those modules become remainder bits.</p>
+      <div class="fmt-sub">Worked Example</div>
+      <p class="anat-copy">The page already lists version 20 as having <span class="font-mono">8,324</span> data modules, written as <span class="font-mono">1040 CW x 8 + 4 rem</span>. That means the version can carry <span class="font-mono">1040</span> total codewords across data and ECC, which consumes <span class="font-mono">8,320</span> modules. Four writable modules are still left over, so the encoder writes four zero remainder bits into them.</p>
+      <div class="overflow-auto mt-2">
+        <table class="anno-table text-sm w-full" style="max-width:760px;">
+          <thead><tr><th>Example Version</th><th>Usable Data Modules</th><th>Total Codewords</th><th>Codeword Bits</th><th>Remainder Bits</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>208</td><td>26</td><td>208</td><td>0</td></tr>
+            <tr><td>2</td><td>359</td><td>44</td><td>352</td><td>7</td></tr>
+            <tr><td>14</td><td>1,971</td><td>246</td><td>1,968</td><td>3</td></tr>
+            <tr><td>20</td><td>8,324</td><td>1040</td><td>8,320</td><td>4</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="anat-copy">The important takeaway is that remainder bits are a property of the version's final writable-module count, not of the message, ECC level, or mask pattern. Once you choose a version, the remainder-bit count is fixed.</p>
+      <div class="fmt-sub">What Values They Hold</div>
+      <p class="anat-copy">Remainder bits are always zero. There is no choice here and there is no optimization step. After all interleaved data and ECC codewords have been placed, the encoder writes zeroes into the remaining eligible modules. A decoder does not interpret them as payload and does not feed them into Reed-Solomon decoding.</p>
+      <div class="fmt-sub">Where They Sit in the Stream</div>
+      <p class="anat-copy">In the logical stream order, remainder bits come after everything else:</p>
+      <ul class="anat-list">
+        <li>mode indicator</li>
+        <li>character count field</li>
+        <li>encoded payload bits</li>
+        <li>terminator and zero padding to byte boundary</li>
+        <li>pad codewords</li>
+        <li>ECC codewords</li>
+        <li>remainder bits</li>
+      </ul>
+      <p class="anat-copy">This matters because remainder bits are outside the Reed-Solomon-protected byte stream. They do not belong to any block, they are not interleaved as codewords, and they have no effect on payload recovery.</p>
+      <div class="fmt-sub">How They Are Used During Placement</div>
+      <p class="anat-copy">The matrix walk does not need a special path for remainder bits. The encoder performs the same normal zig-zag traversal used for all writable modules. It places interleaved data and ECC bits first. If the traversal still has eligible modules left after the final codeword bit is consumed, those last modules receive zero remainder bits in the same traversal order.</p>
+      <div class="fmt-sub">How a Decoder Treats Them</div>
+      <p class="anat-copy">A decoder reconstructs the sequence of writable modules, demasks them, and reassembles codewords until it has read the version's defined number of total codewords. If a few modules remain after that count, the decoder knows they are remainder bits and stops treating them as codeword data. They are effectively ignored after structural validation.</p>
+      <div class="fmt-sub">Version Groups</div>
+      <div class="overflow-auto mt-2">
+        <table class="anno-table text-sm w-full" style="max-width:420px;">
+          <thead><tr><th>Remainder Bits</th><th>Versions</th></tr></thead>
+          <tbody>
+            <tr><td>0 bits</td><td>1, 7-13, 35-40</td></tr>
+            <tr><td>7 bits</td><td>2-6</td></tr>
+            <tr><td>3 bits</td><td>14-20, 28-34</td></tr>
+            <tr><td>4 bits</td><td>21-27</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="fmt-sub">Common Confusions</div>
+      <ul class="anat-list">
+        <li>Remainder bits are not the same thing as the Reed-Solomon remainder that generates ECC codewords. The names are similar, but they describe different parts of the process.</li>
+        <li>Remainder bits are not pad codewords. Pad codewords are full bytes inserted before ECC generation; remainder bits are a few trailing modules after all codewords are done.</li>
+        <li>Remainder bits do not increase capacity. They exist precisely because there are not enough leftover modules to form a full extra byte.</li>
+        <li>Remainder-bit count depends on version only, not on the message contents.</li>
+      </ul>
+    </section>
+
+    <section class="anat-card" id="format-information" style="scroll-margin-top:96px;">
+      <div class="flex items-center gap-2 mb-2"><span class="path-swatch" style="background:#ef4444"></span><h2 class="text-2xl font-bold text-navy-900 m-0">Format Information</h2></div>
+      <div class="fmt-sub">Purpose</div>
+      <p class="anat-copy">Format information tells the decoder two things it must know before reading the payload: the error correction level and the data mask pattern used across the symbol.</p>
+      <div class="fmt-sub">The 15-Bit Format String</div>
+      <p class="anat-copy">The format string is 15 bits total: 2 ECC bits, 3 mask bits, and 10 <strong>BCH</strong> error-correction bits. BCH is a short binary error-correcting code used here to protect small metadata strings like format and version information.</p>
+      <ul class="anat-list mt-3">
+        <li><strong>Bits 14-13:</strong> ECC level</li>
+        <li><strong>Bits 12-10:</strong> mask pattern</li>
+        <li><strong>Bits 9-0:</strong> BCH redundancy</li>
+      </ul>
+      <div class="fmt-sub">Where the Mask Option Lives in the Diagram</div>
+      <p class="anat-copy">The mask choice is not stored somewhere else in the QR symbol. It lives inside the 15-bit format string itself. The three orange cells below are the mask-pattern bits, so this is the exact place where the selected mask option is represented.</p>
+      <div class="fmt-bitstrip" aria-label="Format information bit layout">
+        <div class="fmt-bit ecc">14</div>
+        <div class="fmt-bit ecc">13</div>
+        <div class="fmt-bit mask">12</div>
+        <div class="fmt-bit mask">11</div>
+        <div class="fmt-bit mask">10</div>
+        <div class="fmt-bit bch">9</div>
+        <div class="fmt-bit bch">8</div>
+        <div class="fmt-bit bch">7</div>
+        <div class="fmt-bit bch">6</div>
+        <div class="fmt-bit bch">5</div>
+        <div class="fmt-bit bch">4</div>
+        <div class="fmt-bit bch">3</div>
+        <div class="fmt-bit bch">2</div>
+        <div class="fmt-bit bch">1</div>
+        <div class="fmt-bit bch">0</div>
+      </div>
+      <div class="fmt-legend">
+        <span><i class="fmt-legend-chip" style="background:#fee2e2;border-color:#fca5a5"></i> ECC level bits</span>
+        <span><i class="fmt-legend-chip" style="background:#ffedd5;border-color:#fdba74"></i> Mask pattern bits</span>
+        <span><i class="fmt-legend-chip" style="background:#eef2ff;border-color:#c7d2fe"></i> BCH protection bits</span>
+      </div>
+      <div class="code-panel">example format payload before BCH and XOR mask
+
+ECC level Q         11
+mask pattern 5      101
+
+combined 5 bits     11101
+stored as bits      [14 13][12 11 10] + 10 BCH bits</div>
+      <p class="anat-copy" style="margin-top:12px;">The BCH correction bits are computed with generator polynomial <span class="font-mono">x^10 + x^8 + x^5 + x^4 + x^2 + x + 1</span>. The full 15-bit string is then XORed with the fixed mask <span class="font-mono">101010000010010</span> so that all-zero and all-one format strings do not occur.</p>
+      <div class="fmt-sub">What Masking Means in Plain Language</div>
+      <p class="anat-copy">Masking does not encrypt the message. It only flips selected data modules so the final symbol avoids patterns that are visually awkward for scanners, such as long runs, heavy clumps, or finder-like stripes in the wrong place.</p>
+      <div class="fmt-sub">Placement - Two Copies</div>
+      <p class="anat-copy">Both copies encode the same information. If one copy is damaged, the other can still be decoded.</p>
+      <ul class="anat-list">
+        <li>Copy 1 sits next to the top-left finder pattern.</li>
+        <li>It occupies row 8 columns 0-5, row 8 column 7, row 8 column 8, and column 8 rows 7-0.</li>
+        <li>Copy 2 is split between row 8 near the top-right finder and column 8 near the bottom-left finder.</li>
+      </ul>
+      <div class="fmt-sub">Bit Ordering</div>
+      <p class="anat-copy">In Copy 1, bit 14 (<strong>MSB</strong>, most-significant bit) begins at row 8, col 0 and bit 0 (<strong>LSB</strong>, least-significant bit) ends at col 8, row 0. In Copy 2, bit 14 begins near col 8, row size-7 and the later bits continue near the top-right strip.</p>
+      <div class="fmt-sub" id="format-ecc-level-reference" style="scroll-margin-top:96px;">ECC Level Reference</div>
+      <div class="overflow-auto mt-2">
+        <table class="anno-table text-sm w-full">
+          <thead><tr><th>Level</th><th>Indicator Bits</th><th>Recovery Capacity</th><th>Use Case</th></tr></thead>
+          <tbody>
+            <tr><td>L</td><td class="font-mono">01</td><td>~7%</td><td>Clean environments</td></tr>
+            <tr><td>M</td><td class="font-mono">00</td><td>~15%</td><td>General use</td></tr>
+            <tr><td>Q</td><td class="font-mono">11</td><td>~25%</td><td>Moderate damage tolerance</td></tr>
+            <tr><td>H</td><td class="font-mono">10</td><td>~30%</td><td>High-damage environments</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="fmt-sub" id="format-mask-pattern-reference" style="scroll-margin-top:96px;">Mask Pattern Reference</div>
+      <div class="overflow-auto mt-2">
+        <table class="anno-table text-sm w-full">
+          <thead><tr><th>Pattern</th><th>Bits</th><th>Formula</th><th>Visual Effect</th></tr></thead>
+          <tbody>
+            <tr><td>0</td><td class="font-mono">000</td><td class="font-mono">(row + col) mod 2 = 0</td><td>Checkerboard</td></tr>
+            <tr><td>1</td><td class="font-mono">001</td><td class="font-mono">row mod 2 = 0</td><td>Horizontal stripes</td></tr>
+            <tr><td>2</td><td class="font-mono">010</td><td class="font-mono">col mod 3 = 0</td><td>Vertical stripes</td></tr>
+            <tr><td>3</td><td class="font-mono">011</td><td class="font-mono">(row + col) mod 3 = 0</td><td>Diagonal stripes</td></tr>
+            <tr><td>4</td><td class="font-mono">100</td><td class="font-mono">(floor(row/2) + floor(col/3)) mod 2 = 0</td><td>Large blocks</td></tr>
+            <tr><td>5</td><td class="font-mono">101</td><td class="font-mono">(row*col) mod 2 + (row*col) mod 3 = 0</td><td>Sparse dots</td></tr>
+            <tr><td>6</td><td class="font-mono">110</td><td class="font-mono">((row*col) mod 2 + (row*col) mod 3) mod 2 = 0</td><td>Dense texture</td></tr>
+            <tr><td>7</td><td class="font-mono">111</td><td class="font-mono">((row + col) mod 2 + (row*col) mod 3) mod 2 = 0</td><td>Mixed pattern</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="anat-card">
+      <div class="flex items-center gap-2 mb-2"><span class="path-swatch" style="background:#8b5cf6"></span><h2 class="text-2xl font-bold text-navy-900 m-0">Version Information</h2></div>
+      <div class="fmt-sub">Purpose</div>
+      <p class="anat-copy">Present only in versions 7-40. Version information encodes the version number as an 18-bit string so decoders can confirm symbol size without counting modules, which matters when large symbols are distorted or partially obscured.</p>
+      <div class="fmt-sub">The 18-Bit Version String</div>
+      <p class="anat-copy">The version block is 18 bits total: 6 data bits for the version number and 12 BCH correction bits. The BCH generator used is <span class="font-mono">x^12 + x^11 + x^10 + x^9 + x^8 + x^5 + x^2 + 1</span>, and the code can correct up to 3 bit errors in the version block.</p>
+      <ul class="anat-list mt-3">
+        <li><strong>Bits 17-12:</strong> version number</li>
+        <li><strong>Bits 11-0:</strong> BCH redundancy</li>
+      </ul>
+      <div class="fmt-sub">Why Versions 1-6 Do Not Need It</div>
+      <p class="anat-copy">Small symbols are easier to size from the finder patterns and timing lines alone. By the time the decoder sees version 1 through 6, it can infer the grid size reliably enough that a dedicated 18-bit version block would waste valuable space. Versions 7 and above are large enough that explicit confirmation becomes worth the reserved modules.</p>
+      <div class="fmt-sub">Example Version Strings</div>
+      <div class="overflow-auto mt-2">
+        <table class="anno-table text-sm w-full">
+          <thead><tr><th>Version</th><th>Binary (6-bit)</th><th>Full 18-bit String</th></tr></thead>
+          <tbody>
+            <tr><td>7</td><td class="font-mono">000111</td><td class="font-mono">000111 110010 010100</td></tr>
+            <tr><td>10</td><td class="font-mono">001010</td><td class="font-mono">001010 011110 111100</td></tr>
+            <tr><td>20</td><td class="font-mono">010100</td><td class="font-mono">010100 111011 100100</td></tr>
+            <tr><td>40</td><td class="font-mono">101000</td><td class="font-mono">101000 100100 111101</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="fmt-sub">Placement - Two Identical Copies</div>
+      <p class="anat-copy">Both copies encode the same 18 bits. The string is arranged as a 6x3 block read column-by-column, top-to-bottom, left-to-right.</p>
+      <ul class="anat-list">
+        <li>Copy 1: top-right block, rows 0-5 and columns size-11 through size-9.</li>
+        <li>Copy 2: bottom-left block, rows size-11 through size-9 and columns 0-5.</li>
+        <li>Copy 2 is effectively the transposed mirror of Copy 1.</li>
+      </ul>
+      <div class="mt-3 flex flex-wrap gap-5">
+        <div>
+          <div class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Copy 1 Bit Layout</div>
+          <div class="ver-grid cols-3">
+            <div class="ver-cell">0</div><div class="ver-cell">6</div><div class="ver-cell">12</div>
+            <div class="ver-cell">1</div><div class="ver-cell">7</div><div class="ver-cell">13</div>
+            <div class="ver-cell">2</div><div class="ver-cell">8</div><div class="ver-cell">14</div>
+            <div class="ver-cell">3</div><div class="ver-cell">9</div><div class="ver-cell">15</div>
+            <div class="ver-cell">4</div><div class="ver-cell">10</div><div class="ver-cell">16</div>
+            <div class="ver-cell">5</div><div class="ver-cell">11</div><div class="ver-cell">17</div>
+          </div>
+        </div>
+        <div>
+          <div class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Copy 2 Bit Layout</div>
+          <div class="ver-grid cols-6">
+            <div class="ver-cell">0</div><div class="ver-cell">1</div><div class="ver-cell">2</div><div class="ver-cell">3</div><div class="ver-cell">4</div><div class="ver-cell">5</div>
+            <div class="ver-cell">6</div><div class="ver-cell">7</div><div class="ver-cell">8</div><div class="ver-cell">9</div><div class="ver-cell">10</div><div class="ver-cell">11</div>
+            <div class="ver-cell">12</div><div class="ver-cell">13</div><div class="ver-cell">14</div><div class="ver-cell">15</div><div class="ver-cell">16</div><div class="ver-cell">17</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="anat-card">
+      <div class="flex items-center gap-2 mb-2"><span class="path-swatch" style="background:#3b82f6"></span><h2 class="text-2xl font-bold text-navy-900 m-0">Zig-Zag Bit Ordering</h2></div>
+      <div class="fmt-sub">Overview</div>
+      <p class="anat-copy">Once the payload and ECC bytes exist, the QR encoder must pour those bits into the remaining empty modules. It does that by sweeping right-to-left through 2-column-wide vertical strips, alternating travel direction up and down.</p>
+      <div class="fmt-sub">Step-by-Step Walk Algorithm</div>
+      <div class="space-y-2 text-sm text-slate-700 leading-7 mt-2">
+        <p><strong class="text-slate-900">Step 1:</strong> Start at the bottom-right corner of the symbol.</p>
+        <p><strong class="text-slate-900">Step 2:</strong> Move in a 2-column-wide strip, using the right column first and then the left column at each row.</p>
+        <p><strong class="text-slate-900">Step 3:</strong> Alternate direction by strip: up, then down, then up again.</p>
+        <p><strong class="text-slate-900">Step 4:</strong> Skip column 6 entirely because it is the vertical timing pattern.</p>
+        <p><strong class="text-slate-900">Step 5:</strong> Skip function modules without advancing the bitstream index.</p>
+        <p><strong class="text-slate-900">Step 6:</strong> Stop when all eligible data modules are filled.</p>
+      </div>
+      <div class="fmt-sub">Visual Diagram of Strip Order</div>
+      <div class="code-panel">direction of column-pair sweep (right to left)
+
+| Strip 4 | Strip 3 | Strip 2 | Strip 1 |
+|   UP    |  DOWN   |   UP    |  DOWN   |
+| col n-7 | col n-5 | col n-3 | col n-1 |
+| col n-8 | col n-6 | col n-4 | col n-2 |
+| skip 6  |         |         | start   |</div>
+      <div class="fmt-sub">Tiny Placement Example</div>
+      <p class="anat-copy">Imagine codeword 0 begins with bits 1 0 1 1 0 0 1 0. Bit 7 goes into the first visited data module, bit 6 goes into the second, and so on. Only after every bit of every interleaved codeword is placed are any leftover remainder modules filled with zero bits.</p>
+      <div class="fmt-sub">Right-Column-First Rule</div>
+      <p class="anat-copy">Within each 2-wide strip, the right column is placed first and the left column second. At a given row, the sequence is right-current, left-current, right-next, left-next.</p>
+      <div class="fmt-sub">MSB-First Codeword Placement</div>
+      <p class="anat-copy">Codewords are placed most-significant-bit first. Bit 7 of codeword 0 goes into the first visited data module; bit 0 of the final codeword is placed just before any remainder bits.</p>
+      <div class="fmt-sub">Remainder Bits</div>
+      <p class="anat-copy">After all data and ECC codewords are placed, some versions still have a few leftover modules. Those are filled with zero-valued remainder bits and do not carry payload information.</p>
+      <div class="overflow-auto mt-2">
+        <table class="anno-table text-sm w-full" style="max-width:420px;">
+          <thead><tr><th>Remainder Bits</th><th>Versions</th></tr></thead>
+          <tbody>
+            <tr><td>0 bits</td><td>1, 7-13, 35-40</td></tr>
+            <tr><td>7 bits</td><td>2-6</td></tr>
+            <tr><td>3 bits</td><td>14-20, 28-34</td></tr>
+            <tr><td>4 bits</td><td>21-27</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="fmt-sub">Why This Order?</div>
+      <p class="anat-copy">Zig-zag placement distributes data across the full area of the symbol. Combined with block interleaving, that means local physical damage corrupts many different blocks a little instead of destroying one block completely, which is exactly what Reed-Solomon correction wants.</p>
+      <div class="path-legend-bar mt-5">
+        <span class="legend-item"><span class="path-swatch" style="background:#3b82f6"></span> Data codewords</span>
+        <span class="legend-item"><span class="path-swatch" style="background:#ef4444"></span> Error correction</span>
+        <span class="legend-item"><span class="path-swatch" style="background:#a855f7"></span> Remainder bits</span>
+        <span class="text-[10px]">Numbers in the live overlay represent bit index within a codeword (7 = MSB, 0 = LSB).</span>
+      </div>
+    </section>
+
+    <section class="card" id="version-ecc-tradeoffs" style="scroll-margin-top:96px;">
+        <h2 class="section-heading text-2xl font-bold mb-2">Version and ECC Tradeoffs</h2>
+        <p class="section-intro">A larger version increases module count and capacity. A higher ECC level increases redundancy but reduces space available for payload bytes. Beginners can think of this as a trade between room and resilience.</p>
+        <div class="mt-5 overflow-auto">
+          <table class="anno-table text-sm w-full">
+            <thead><tr><th>ECC</th><th>Approx. Recovery</th><th>Main Tradeoff</th></tr></thead>
+            <tbody>
+              <tr><td class="font-mono">L</td><td>~7%</td><td>Maximum payload capacity, least redundancy.</td></tr>
+              <tr><td class="font-mono">M</td><td>~15%</td><td>Balanced default setting.</td></tr>
+              <tr><td class="font-mono">Q</td><td>~25%</td><td>Higher resilience, lower payload budget.</td></tr>
+              <tr><td class="font-mono">H</td><td>~30%</td><td>Strongest redundancy, smallest payload budget.</td></tr>
+            </tbody>
+          </table>
+        </div>
+    </section>
+
+    <section class="card">
+      <h2 class="section-heading text-2xl font-bold mb-2">ECC and Error Correction</h2>
+      <p class="section-intro">ECC means <strong>error correction codewords</strong>: extra bytes added to a QR code so a scanner can still recover the message when part of the symbol is damaged, blurred, cropped, dirty, or hard to read. The big idea is simple: the QR does not only store your message. It also stores extra check bytes that describe the message in a recoverable way.</p>
+      <div class="fmt-sub">Start With the Big Idea</div>
+      <p class="anat-copy">Imagine writing down a message and then writing down some extra helper notes about that message. If one part of the original message gets smudged, those helper notes can help you reconstruct what was lost. That is what ECC is doing. It is <strong>not</strong> making a full duplicate copy of the message. It is adding carefully chosen recovery bytes.</p>
+      <p class="anat-copy" style="margin-top:12px;">In QR, the important working unit is the <strong>codeword</strong>, which is one byte. Recovery happens at codeword level, not at raw pixel level. First the scanner turns the image back into dark and light modules, then into bits, then into codewords. Only after that does ECC begin helping.</p>
+      <div class="fmt-sub">Definitions You Need First</div>
+      <ul class="anat-list">
+        <li><strong>Data codeword:</strong> one byte that belongs to the real message stream.</li>
+        <li><strong>ECC codeword:</strong> one byte added only for recovery.</li>
+        <li><strong>Block:</strong> one chunk of codewords that gets its own local ECC protection.</li>
+        <li><strong>Interleaving:</strong> mixing bytes from different blocks together before placement so local damage gets spread out.</li>
+        <li><strong>Erasure:</strong> a byte position the decoder already knows is missing or unreliable.</li>
+        <li><strong>Demasking:</strong> reversing the chosen mask rule so the decoder sees the real written data bits again.</li>
+      </ul>
+      <div class="fmt-sub">What ECC Actually Protects</div>
+      <p class="anat-copy">A QR symbol contains both fixed structure and message-carrying structure. ECC protects only the payload stream: mode indicator, character count, encoded payload bits, terminator bits, pad structure, and the final data codewords made from those bits. Finder patterns, timing patterns, alignment patterns, and format/version metadata are structural helpers; they are not part of the protected message polynomial.</p>
+      <div class="fmt-sub">A Toy Formula Before Real QR Math</div>
+      <p class="anat-copy">Before looking at the real QR formulas, use a tiny toy example. Suppose we store three bytes <span class="font-mono">A</span>, <span class="font-mono">B</span>, and <span class="font-mono">C</span>, then create one helper byte with this rule:</p>
+      <div class="code-panel">toy recovery formula
+
+P = A xor B xor C</div>
+      <p class="anat-copy">If the stored values are <span class="font-mono">A = 12</span>, <span class="font-mono">B = 5</span>, and <span class="font-mono">C = 9</span>, then:</p>
+      <div class="code-panel">P = 12 xor 5 xor 9 = 0</div>
+      <p class="anat-copy">Now imagine <span class="font-mono">B</span> is lost, but <span class="font-mono">A</span>, <span class="font-mono">C</span>, and <span class="font-mono">P</span> are still known. You can recover <span class="font-mono">B</span> by rearranging the same rule:</p>
+      <div class="code-panel">B = P xor A xor C
+B = 0 xor 12 xor 9 = 5</div>
+      <p class="anat-copy">QR does <strong>not</strong> use this exact toy formula. Real QR uses a much stronger system that can recover more complicated patterns of missing or wrong bytes. But the toy example shows the core idea correctly: extra bytes can make lost bytes recoverable.</p>
+      <div class="overflow-auto mt-2">
+        <table class="anno-table text-sm w-full">
+          <thead><tr><th>Version 1 Example</th><th>Total Codewords</th><th>Data Codewords</th><th>ECC Codewords</th><th>Blocks</th></tr></thead>
+          <tbody>
+            <tr><td class="font-mono">L</td><td>26</td><td>19</td><td>7</td><td>1</td></tr>
+            <tr><td class="font-mono">M</td><td>26</td><td>16</td><td>10</td><td>1</td></tr>
+            <tr><td class="font-mono">Q</td><td>26</td><td>13</td><td>13</td><td>1</td></tr>
+            <tr><td class="font-mono">H</td><td>26</td><td>9</td><td>17</td><td>1</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="fmt-sub" id="ecc-byte-counts" style="scroll-margin-top:96px;">Where the ECC Byte Counts Come From</div>
+      <p class="anat-copy">The familiar levels <span class="font-mono">L</span>, <span class="font-mono">M</span>, <span class="font-mono">Q</span>, and <span class="font-mono">H</span> are table choices, not formulas that directly turn a percentage into a byte count. For each version and ECC level, the QR specification already defines the exact number of data codewords, the number of blocks, and the number of ECC codewords per block.</p>
+      <p class="anat-copy" style="margin-top:12px;">The first exact formula to learn is just a counting identity:</p>
+      <div class="code-panel">total codewords = data codewords + ECC codewords</div>
+      <p class="anat-copy">For version 1 at level M, the table says:</p>
+      <div class="code-panel">26 total codewords = 16 data + 10 ECC</div>
+      <p class="anat-copy">Because each codeword is one byte, you can also count bits:</p>
+      <div class="code-panel">total codeword bits = total codewords * 8
+data bits          = data codewords * 8
+ECC bits           = ECC codewords * 8</div>
+      <p class="anat-copy">Using version 1 M again:</p>
+      <div class="code-panel">208 total bits = 26 * 8
+128 data bits  = 16 * 8
+ 80 ECC bits   = 10 * 8</div>
+      <p class="anat-copy">Those are exact QR counts, not toy math. They tell you how much space belongs to message bytes and how much space belongs to recovery bytes.</p>
+      <p class="anat-copy" style="margin-top:12px;">As versions grow, the structure becomes more complex. Many versions split the payload across several blocks, and some versions use two block groups of slightly different data lengths. The encoder does not invent those counts on the fly; it looks them up from the QR version/ECC tables, then computes recovery bytes separately for each block.</p>
+      <div class="fmt-sub">A Simple Damage Formula</div>
+      <p class="anat-copy">When people ask, “How much damage can ECC fix?”, the first exact rule is this:</p>
+      <div class="code-panel">guaranteed unknown-codeword correction per block = floor(ECC codewords in that block / 2)</div>
+      <p class="anat-copy">The word <span class="font-mono">floor</span> just means “round down.” So if a block has 10 ECC codewords:</p>
+      <div class="code-panel">floor(10 / 2) = 5</div>
+      <p class="anat-copy">That means the block can guarantee recovery from up to 5 unknown bad codewords in that block. If the decoder already knows which positions are unreliable, those are called erasures and the trade becomes more favorable.</p>
+      <div class="fmt-sub">How to Apply the Idea Across a Full Symbol</div>
+      <p class="anat-copy">Now scale the simple ideas up from one toy group of bytes to a full QR symbol:</p>
+      <ul class="anat-list">
+        <li><strong>1. Choose version and ECC level:</strong> this fixes the total byte budget and the recovery budget.</li>
+        <li><strong>2. Build the data bytes:</strong> mode bits, count field, payload bytes, terminator, zero padding, and pad codewords become the data codewords.</li>
+        <li><strong>3. Split into blocks:</strong> some QR symbols use one block, others use many.</li>
+        <li><strong>4. Compute ECC bytes per block:</strong> each block gets its own recovery bytes.</li>
+        <li><strong>5. Interleave:</strong> mix bytes from different blocks together so one torn corner does not destroy one whole block all at once.</li>
+        <li><strong>6. Place the bits into modules:</strong> the combined data and ECC stream is written into the data region of the symbol.</li>
+        <li><strong>7. Decode in reverse:</strong> the scanner reads modules, demasks them, rebuilds codewords, deinterleaves blocks, and then uses the ECC bytes to repair damaged codewords.</li>
+      </ul>
+      <p class="anat-copy">That full-symbol flow is the practical version of ECC. The encoder adds recovery bytes block by block, then the decoder later uses those same block rules to repair missing or wrong codewords.</p>
+      <div class="fmt-sub">A Full-Symbol Worked Example</div>
+      <p class="anat-copy">Use version 1 M because it is small and has only one block:</p>
+      <div class="code-panel">version 1 M
+
+16 data codewords
+10 ECC codewords
+ 1 block
+26 total codewords</div>
+      <p class="anat-copy">Here the “apply it to the whole symbol” story is straightforward:</p>
+      <ul class="anat-list">
+        <li>The message is converted into 16 data codewords.</li>
+        <li>The encoder computes 10 ECC codewords from those 16 data codewords.</li>
+        <li>The final symbol stores all 26 codewords.</li>
+        <li>If a few codewords are later corrupted, the decoder can use the 10 ECC codewords to repair the damaged data, as long as the damage stays within the correction budget.</li>
+      </ul>
+      <p class="anat-copy">Larger symbols follow the same story, but with more blocks. The only new complication is that the bytes are mixed together before placement and unmixed again during decoding.</p>
+      <div class="fmt-sub">What the Four ECC Levels Really Mean in Practice</div>
+      <div class="overflow-auto mt-2">
+        <table class="anno-table text-sm w-full">
+          <thead><tr><th>Level</th><th>Approx. Recovery Summary</th><th>What Actually Changes Under the Hood</th><th>Main Cost</th></tr></thead>
+          <tbody>
+            <tr><td class="font-mono">L</td><td>~7%</td><td>Fewest ECC codewords in the version table.</td><td>Least resilience, most payload room.</td></tr>
+            <tr><td class="font-mono">M</td><td>~15%</td><td>More ECC codewords and sometimes different block structure.</td><td>Lower payload room than L.</td></tr>
+            <tr><td class="font-mono">Q</td><td>~25%</td><td>Substantially more parity bytes per symbol.</td><td>Often forces a larger version for the same message.</td></tr>
+            <tr><td class="font-mono">H</td><td>~30%</td><td>Highest parity allocation in the version table.</td><td>Smallest payload budget and denser output for the same message.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="anat-copy">The important beginner takeaway is that a higher level means more recovery bytes and fewer message bytes. It does not mean the QR has magically become unbreakable.</p>
+      <div class="fmt-sub">Common Misunderstandings</div>
+      <ul class="anat-list">
+        <li>ECC is not a second full copy of the message.</li>
+        <li>ECC helps with damaged codewords, not with every possible failure. If the scanner cannot even find the symbol structure, ECC never gets a chance to help.</li>
+        <li>More ECC is not always better. If it forces the modules to become too small for the printer, screen, or camera, scanning can get worse.</li>
+        <li>A logo can work only if the remaining codeword damage stays inside the recovery budget.</li>
+      </ul>
+      <div class="fmt-sub">Advanced: What QR Actually Computes</div>
+      <p class="anat-copy">Everything above is the zero-knowledge version. The real QR algorithm uses Reed-Solomon coding over <span class="font-mono">GF(256)</span>. That means each block of data codewords is treated as a <strong>polynomial</strong>, meaning an algebraic expression whose coefficients are byte values, and the encoder computes the ECC bytes as a remainder after division by a generator polynomial. That is why you will see names like <strong>generator polynomial</strong>, <strong>syndromes</strong>, <strong>error locator polynomial</strong>, and <strong>Forney's formula</strong> in deeper references.</p>
+      <div class="code-panel">encoder-side Reed-Solomon outline for one block
+
+input bytes                d0 d1 d2 ... d(k-1)
+ECC bytes required         t
+
+message polynomial         d(x)
+shift for parity space     d(x) * x^t
+generator polynomial       g(x)
+
+divide in GF(256)          (d(x) * x^t) / g(x)
+keep remainder             r(x)
+
+ECC codewords              coefficients of r(x)
+stored block               data bytes followed by ECC bytes</div>
+      <div class="fmt-sub">What Arithmetic QR Uses</div>
+      <p class="anat-copy">QR Reed-Solomon arithmetic happens in the finite field <span class="font-mono">GF(256)</span>, using the primitive polynomial <span class="font-mono">x^8 + x^4 + x^3 + x^2 + 1</span> (hex <span class="font-mono">0x11D</span>). Addition and subtraction are both XOR. Multiplication and division are field operations, usually implemented with log and antilog lookup tables instead of slow polynomial math at runtime.</p>
+      <div class="code-panel">GF(256) facts used by QR encoders
+
+byte addition              XOR
+byte subtraction           XOR
+byte multiplication        field multiply modulo 0x11D
+generator roots            a^0 through a^(t-1)
+
+practical implementation   precompute exp/log tables
+why this matters           parity bytes depend on field math, not normal integer division</div>
+      <div class="fmt-sub">How the Decoder Uses ECC for Recovery</div>
+      <ul class="anat-list">
+        <li>Read the symbol, undo masking, and reconstruct the interleaved stream of data and ECC codewords.</li>
+        <li><strong>Deinterleave</strong> the stream back into the original Reed-Solomon blocks, meaning restore the mixed placement order into the original per-block groupings.</li>
+        <li>For each block, compute <strong>syndromes</strong> by evaluating the received polynomial at the generator roots. A syndrome is a compact consistency check; all-zero syndromes mean the block is consistent.</li>
+        <li>If syndromes are nonzero, derive an <strong>error locator polynomial</strong>, an algebraic object whose roots identify the bad codeword positions, commonly with Berlekamp-Massey or the extended Euclidean algorithm.</li>
+        <li>Run a root search over field elements to locate the failing codeword positions.</li>
+        <li>Compute error magnitudes, commonly with <strong>Forney's formula</strong>, a standard step that turns the locator information and syndromes into the amount each bad codeword must change, then patch the bad codewords.</li>
+        <li>If correction succeeds for every block, reassemble the corrected data codewords and continue normal QR payload parsing.</li>
+      </ul>
+      <div class="code-panel">decoder-side recovery outline for one block
+
+received block             c'(x)
+compute syndromes          S_i = c'(a^i)
+
+all S_i = 0 ?              block is consistent
+otherwise                  locate and solve errors
+
+derive locator             sigma(x)
+find bad positions         roots of sigma(x)
+compute magnitudes         how much each bad byte must change
+correct block              patch bytes so syndromes become zero</div>
+      <div class="bridge-note mt-5">
+        <p><strong>How this connects to the rest of the page:</strong> the earlier sections explain how the symbol is built, where the data lives, and how the bits are placed. This section explains how the extra recovery bytes let the decoder repair damage after those earlier structures have been read correctly.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+  </footer>
+
+  <script src="assets/js/site-nav.js"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

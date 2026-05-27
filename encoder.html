@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QR Peach Encoder</title>
+  <meta name="description" content="Build QR payloads in the browser and inspect how bytes, bitstream values, ECC, and modules are laid out." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="assets/js/tailwind-config.js"></script>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="stylesheet" href="assets/css/site.css" />
+  <style>
+    :root {
+      --format-ecc-accent: #16a34a;
+      --format-ecc-soft: #dcfce7;
+      --format-ecc-line: #86efac;
+      --format-mask-accent: #ef4444;
+      --format-mask-soft: #fee2e2;
+      --format-mask-line: #fca5a5;
+      --format-bch-accent: #6366f1;
+      --format-bch-soft: #eef2ff;
+      --format-bch-line: #c7d2fe;
+    }
+
+    .format-info-panel {
+      max-width: 100%;
+    }
+
+      .format-bitstream {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0;
+        margin-top: 2px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        letter-spacing: 0.08em;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+      .format-bit-char {
+        font-weight: 700;
+    }
+
+      .format-bit-char.ecc {
+      color: var(--format-ecc-accent);
+    }
+
+      .format-bit-char.mask {
+      color: var(--format-mask-accent);
+    }
+
+      .format-bit-char.bch {
+      color: var(--format-bch-accent);
+    }
+
+      .format-mask-note {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    .format-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 12px;
+      margin-top: 10px;
+      font-size: 0.72rem;
+      color: #475569;
+    }
+
+    .format-legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .format-legend-chip {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      display: inline-block;
+      border: 1px solid transparent;
+    }
+
+    .format-legend-chip.ecc {
+      background: var(--format-ecc-soft);
+      border-color: var(--format-ecc-line);
+    }
+
+    .format-legend-chip.mask {
+      background: var(--format-mask-soft);
+      border-color: var(--format-mask-line);
+    }
+
+    .format-legend-chip.bch {
+      background: var(--format-bch-soft);
+      border-color: var(--format-bch-line);
+    }
+
+    .final-mask-control {
+      display: grid;
+      gap: 8px;
+      max-width: 100%;
+    }
+
+    .final-mask-control label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      max-width: 100%;
+    }
+
+    .final-mask-control-copy {
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    #encoder-final-meta .anno-table,
+    #encoder-specs .anno-table,
+    #encoder-ecc-profile .anno-table {
+      width: auto;
+      max-width: 100%;
+      display: inline-table;
+    }
+
+    @media (max-width: 700px) {
+      .format-bitstream {
+        font-size: 0.88rem;
+        letter-spacing: 0.06em;
+      }
+    }
+  </style>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="qrpeach.js"></script>
+  <script src="assets/js/qrpeach-diagram.js"></script>
+  <script src="assets/js/live-encoder-page.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a class="brand-lockup" href="index.html">
+        <span class="brand-mark"><img src="assets/peach.svg" alt="" /></span>
+        <span>
+          <span class="brand-name">QR Peach</span>
+          <span class="brand-tag">Open QR reference and encoder</span>
+        </span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Toggle navigation" data-nav-toggle>
+        <span class="sr-only">Toggle navigation</span>
+        <span class="nav-toggle-box" aria-hidden="true">
+          <span class="nav-toggle-line"></span>
+          <span class="nav-toggle-line"></span>
+          <span class="nav-toggle-line"></span>
+        </span>
+      </button>
+      <nav class="site-nav" id="site-nav">
+        <a class="nav-link" href="index.html">Home</a>
+        <a class="nav-link" href="learn.html">Learn</a>
+        <a class="nav-link active" href="encoder.html">Encoder</a>
+        <a class="nav-link" href="sources.html">Sources</a>
+        <a class="nav-link" href="download.html">Download</a>
+        <a class="nav-link" href="https://github.com/dahln/QRPeach" target="_blank" rel="noreferrer" aria-label="GitHub"><i data-lucide="github" class="w-4 h-4"></i></a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-shell section-stack">
+    <article class="card">
+      <div class="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h2 class="section-heading text-2xl font-bold mb-2">Payload Builder</h2>
+          <p class="section-intro">Build the payload envelope, then inspect the generated QR symbol immediately beside the inputs.</p>
+        </div>
+        <a class="text-sm font-semibold text-orange-700" href="sources.html">See sources</a>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-6 items-start mt-6">
+        <div>
+          <div class="grid md:grid-cols-2 gap-4">
+            <label class="block">
+              <span class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Payload Type</span>
+              <select id="encoder-type" class="w-full px-3 py-3 text-sm bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400">
+                <option value="text" selected>Text</option>
+                <option value="uri">Generic URI</option>
+                <option value="url">URL</option>
+                <option value="email">Email</option>
+                <option value="phone">Phone</option>
+                <option value="sms">SMS</option>
+                <option value="contact">Contact</option>
+                <option value="vcard">vCard</option>
+                <option value="event">Event</option>
+                <option value="wifi">Wi-Fi</option>
+                <option value="geo">Geo</option>
+              </select>
+            </label>
+            <label class="block">
+              <span class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">ECC Level</span>
+              <select id="encoder-ecc" class="w-full px-3 py-3 text-sm bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400">
+                <option value="L">L (~7%)</option>
+                <option value="M" selected>M (~15%)</option>
+                <option value="Q">Q (~25%)</option>
+                <option value="H">H (~30%)</option>
+              </select>
+            </label>
+            <label class="block md:col-span-2">
+              <span class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Version</span>
+              <select id="encoder-version" class="w-full px-3 py-3 text-sm bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400"></select>
+            </label>
+          </div>
+
+          <div id="encoder-type-help" class="mt-5"></div>
+          <div id="encoder-type-fields" class="grid md:grid-cols-2 gap-4 mt-5"></div>
+
+          <div class="mt-5 rounded-3xl border border-slate-200 bg-slate-50 p-5">
+            <div id="encoder-payload-preview"></div>
+          </div>
+
+          <div id="encoder-status" class="mt-5 rounded-3xl border border-slate-200 bg-white p-5 text-sm leading-7"></div>
+        </div>
+
+        <div class="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+          <div class="flex items-start justify-between gap-3 flex-wrap">
+            <div>
+              <div class="text-xs font-semibold uppercase tracking-wide text-slate-500">Generated QR</div>
+              <p class="text-sm text-slate-600 leading-7 mt-2 mb-0">This preview reflects the selected payload, version, and ECC settings. Masking controls appear below the QR preview.</p>
+            </div>
+          </div>
+          <div class="mt-5 rounded-3xl border border-slate-200 bg-white p-5 min-h-[340px] flex items-center justify-center" id="encoder-final-qr"></div>
+          <div class="mt-4 flex flex-wrap items-center gap-3">
+            <div class="text-xs font-semibold uppercase tracking-wide text-slate-500">Download As</div>
+            <button id="encoder-download-svg" type="button" class="inline-flex items-center justify-center rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-300/40 disabled:cursor-not-allowed disabled:opacity-50" disabled>SVG</button>
+            <button id="encoder-download-png" type="button" class="inline-flex items-center justify-center rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-300/40 disabled:cursor-not-allowed disabled:opacity-50" disabled>PNG</button>
+            <button id="encoder-download-jpg" type="button" class="inline-flex items-center justify-center rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-300/40 disabled:cursor-not-allowed disabled:opacity-50" disabled>JPG</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="encoder-mask-control" class="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-5"></div>
+    </article>
+
+    <article class="card">
+      <div class="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h2 class="section-heading text-2xl font-bold mb-2">QR Diagram</h2>
+          <p class="section-intro">Data, ECC, remainder, and bit numbers stay visible. Hover modules or labels to inspect their source.</p>
+        </div>
+        <div class="flex items-center gap-3 min-w-[220px]">
+          <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Zoom</label>
+          <input id="encoder-zoom" class="zoom-slider flex-1" type="range" min="100" max="260" step="10" value="180" />
+          <span id="encoder-zoom-label" class="font-mono text-sm text-slate-600 w-12 text-right">180%</span>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-[auto_auto_1fr] gap-3 mt-5 text-sm text-slate-600 items-center">
+        <label class="inline-flex items-center gap-2"><input id="encoder-show-labels" type="checkbox" checked /> <span>Show labels</span></label>
+        <label class="inline-flex items-center gap-2"><input id="encoder-show-values" type="checkbox" checked /> <span>Show values</span></label>
+        <fieldset id="encoder-value-mode-group" class="flex flex-wrap items-center gap-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2">
+          <legend class="sr-only">Value display mode</legend>
+          <label class="inline-flex items-center gap-2"><input type="radio" name="encoder-value-mode" value="unmasked" checked /> <span>Unmasked</span></label>
+          <label class="inline-flex items-center gap-2"><input type="radio" name="encoder-value-mode" value="masked" /> <span>Masked</span></label>
+        </fieldset>
+      </div>
+
+      <div id="encoder-legend" class="path-legend-bar"></div>
+      <div class="mt-5 overflow-auto rounded-3xl border border-slate-200 bg-white p-4">
+        <div id="encoder-diagram" class="min-w-fit"></div>
+      </div>
+    </article>
+
+    <article class="card">
+      <div>
+        <h2 class="section-heading text-2xl font-bold mb-2">Debugger Analysis</h2>
+        <p class="section-intro">Debug performs an internal virtual scan of the generated symbol, reconstructing format metadata, data bits, ECC bits, and remainder bits from the QR image itself.</p>
+      </div>
+
+      <div class="mt-6 flex flex-wrap items-center gap-3">
+        <button id="encoder-debug-current" type="button" class="inline-flex items-center justify-center rounded-2xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400/40 disabled:cursor-not-allowed disabled:bg-slate-300" disabled>Debug current generated QR</button>
+        <button id="encoder-debug-upload" type="button" class="inline-flex items-center justify-center rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-300/40">Upload image of QR</button>
+        <button id="encoder-debug-clear" type="button" class="inline-flex items-center justify-center rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-300/40 disabled:cursor-not-allowed disabled:opacity-50" disabled>Clear debugger analysis</button>
+        <input id="encoder-debug-upload-input" type="file" accept="image/png,image/jpeg,image/svg+xml,.png,.jpg,.jpeg,.svg" class="hidden" />
+        <div class="text-xs leading-6 text-slate-500">Analyze either the generated SVG preview or an uploaded PNG, JPEG, or SVG QR image.</div>
+      </div>
+
+      <div id="encoder-debug-report" class="mt-6">
+        <p class="text-sm text-slate-400">Choose a debugger action to analyze the generated QR or an uploaded image.</p>
+      </div>
+    </article>
+
+  </main>
+
+  <footer class="site-footer">
+  </footer>
+
+  <div id="qr-tooltip"></div>
+
+  <script src="assets/js/site-nav.js"></script>
+  <script>
+    lucide.createIcons();
+    initLiveEncoderPage();
+  </script>
+</body>
+</html>

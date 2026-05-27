@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QR Peach Sources</title>
+  <meta name="description" content="Source notes and citations used by QR Peach." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="assets/js/tailwind-config.js"></script>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="stylesheet" href="assets/css/site.css" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="assets/js/sources-page.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a class="brand-lockup" href="index.html">
+        <span class="brand-mark"><img src="assets/peach.svg" alt="" /></span>
+        <span>
+          <span class="brand-name">QR Peach</span>
+          <span class="brand-tag">Open QR reference and encoder</span>
+        </span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Toggle navigation" data-nav-toggle>
+        <span class="sr-only">Toggle navigation</span>
+        <span class="nav-toggle-box" aria-hidden="true">
+          <span class="nav-toggle-line"></span>
+          <span class="nav-toggle-line"></span>
+          <span class="nav-toggle-line"></span>
+        </span>
+      </button>
+      <nav class="site-nav" id="site-nav">
+        <a class="nav-link" href="index.html">Home</a>
+        <a class="nav-link" href="learn.html">Learn</a>
+        <a class="nav-link" href="encoder.html">Encoder</a>
+        <a class="nav-link active" href="sources.html">Sources</a>
+        <a class="nav-link" href="download.html">Download</a>
+        <a class="nav-link" href="https://github.com/dahln/QRPeach" target="_blank" rel="noreferrer" aria-label="GitHub"><i data-lucide="github" class="w-4 h-4"></i></a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-shell section-stack">
+    <section class="grid lg:grid-cols-2 gap-6">
+      <article class="source-card">
+        <div class="flex items-start gap-4">
+          <div class="source-badge">1</div>
+          <div>
+            <div class="source-pill source-pill-orange mb-3">Primary Standard</div>
+            <h2 class="card-title">ISO/IEC 18004</h2>
+            <p class="card-copy">The QR Code model, placement rules, format/version information, and capacity relationships ultimately derive from the ISO/IEC 18004 specification family. QR Peach uses public summaries and implementation behavior as the accessible layer over that standard.</p>
+          </div>
+        </div>
+      </article>
+      <article class="source-card">
+        <div class="flex items-start gap-4">
+          <div class="source-badge">2</div>
+          <div>
+            <div class="source-pill source-pill-blue mb-3">Vendor Reference</div>
+            <h2 class="card-title">Denso Wave QR Code Essentials</h2>
+            <p class="card-copy">Denso Wave's public documentation provides concise explanations of finder patterns, alignment patterns, timing patterns, error correction levels, and general QR usage conventions.</p>
+          </div>
+        </div>
+      </article>
+      <article class="source-card">
+        <div class="flex items-start gap-4">
+          <div class="source-badge">3</div>
+          <div>
+            <div class="source-pill source-pill-green mb-3">Capacity Tables</div>
+            <h2 class="card-title">Thonky QR Code Tutorial</h2>
+            <p class="card-copy">Thonky's QR tutorial is one of the clearest public references for version capacities, Reed-Solomon block layouts, format strings, masking, and placement examples. It is especially useful as a sanity check against implementation code.</p>
+          </div>
+        </div>
+      </article>
+      <article class="source-card">
+        <div class="flex items-start gap-4">
+          <div class="source-badge">4</div>
+          <div>
+            <div class="source-pill source-pill-purple mb-3">Project Runtime</div>
+            <h2 class="card-title">qrpeach.js</h2>
+            <p class="card-copy">The runtime is implemented for QR Peach against the QR specification and embeds the generation tables and source metadata directly in the library.</p>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+  </footer>
+
+  <script src="assets/js/site-nav.js"></script>
+  <script>
+    lucide.createIcons();
+    initSourcesPage();
+  </script>
+</body>
+</html>

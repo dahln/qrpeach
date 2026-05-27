@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Peach Demo</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+</head>
+<body>
+    <h1>QR Peach Demo</h1>
+  <p>This page shows the smallest useful QR Peach example: generate one SVG QR code and insert it into the page.</p>
+  <div id="qr"></div>
+  <script src="qrpeach.js"></script>
+  <script>
+    async function main() {
+      const api = window.QRPeach;
+      if (!api) {
+        throw new Error('QRPeach failed to load from qrpeach.js.');
+      }
+
+      const asset = await api.Generate({
+        type: 'text',
+        inputs: { value: 'This is a test' },
+        version: 2,
+        ecc: 'M'
+      }, 'svg', {
+        cellSize: 10,
+        marginModules: 4
+      });
+
+      document.getElementById('qr').innerHTML = asset.svg;
+    }
+
+    main();
+  </script>
+</body>
+</html>
