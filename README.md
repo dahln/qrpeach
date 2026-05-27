@@ -3,7 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/qrpeach?label=npm)](https://www.npmjs.com/package/qrpeach)
 [![npm package](https://img.shields.io/badge/install-npm%20install%20qrpeach-cb3837)](https://www.npmjs.com/package/qrpeach)
 
-[https://calm-grass-0e018d710.7.azurestaticapps.net/](https://orange-sky-048c8d310.7.azurestaticapps.net)
+[https://orange-sky-048c8d310.7.azurestaticapps.net](https://orange-sky-048c8d310.7.azurestaticapps.net)
 
 QR Peach is a QR reference, interactive encoder, and standalone JavaScript library. It is designed for three kinds of use:
 
