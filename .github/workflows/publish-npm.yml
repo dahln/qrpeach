@@ -55,7 +55,20 @@ jobs:
             exit 1
           fi
 
+          npm_tag="latest"
+          if [[ "$version" == *-* ]]; then
+            prerelease="${version#*-}"
+            npm_tag="${prerelease%%.*}"
+            npm_tag="${npm_tag,,}"
+          fi
+
+          if [[ ! "$npm_tag" =~ ^[a-z0-9][a-z0-9._-]*$ ]]; then
+            echo "Resolved npm tag is invalid: $npm_tag" >&2
+            exit 1
+          fi
+
           echo "value=$version" >> "$GITHUB_OUTPUT"
+          echo "npm_tag=$npm_tag" >> "$GITHUB_OUTPUT"
 
       - name: Install minifier
         run: npm install --global terser@5
@@ -112,4 +125,4 @@ jobs:
 
       - name: Publish package
         working-directory: ${{ steps.package_dir.outputs.path }}
-        run: npm publish --access public
+        run: npm publish --access public --tag "${{ steps.version.outputs.npm_tag }}"
