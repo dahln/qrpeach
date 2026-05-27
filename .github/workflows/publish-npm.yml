@@ -1,0 +1,117 @@
+name: Publish to npm
+
+on:
+  release:
+    types:
+      - published
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Semver version to publish, for example 1.0.1 or v1.0.1
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      PACKAGE_NAME: qrpeach
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+
+      - name: Resolve package directory
+        id: package_dir
+        shell: bash
+        run: echo "path=$RUNNER_TEMP/qrpeach-npm-package" >> "$GITHUB_OUTPUT"
+
+      - name: Resolve package version
+        id: version
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ "${GITHUB_EVENT_NAME}" == "release" ]]; then
+            raw_version="${{ github.event.release.tag_name }}"
+          else
+            raw_version="${{ inputs.version }}"
+          fi
+
+          version="${raw_version#v}"
+
+          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$ ]]; then
+            echo "Expected a semver version like 1.0.1 or v1.0.1, got: $raw_version" >&2
+            exit 1
+          fi
+
+          echo "value=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Install minifier
+        run: npm install --global terser@5
+
+      - name: Build temporary npm package
+        shell: bash
+        env:
+          PACKAGE_DIR: ${{ steps.package_dir.outputs.path }}
+          PACKAGE_VERSION: ${{ steps.version.outputs.value }}
+        run: |
+          set -euo pipefail
+
+          rm -rf "$PACKAGE_DIR"
+          mkdir -p "$PACKAGE_DIR"
+
+          cp qrpeach.js "$PACKAGE_DIR/qrpeach.js"
+          terser qrpeach.js --compress --mangle --output "$PACKAGE_DIR/qrpeach.min.js"
+          cp README.md "$PACKAGE_DIR/README.md"
+
+          cat > "$PACKAGE_DIR/package.json" <<EOF
+          {
+            "name": "${PACKAGE_NAME}",
+            "version": "${PACKAGE_VERSION}",
+            "description": "Standalone browser QR encoder and explainer library.",
+            "main": "qrpeach.js",
+            "browser": "qrpeach.js",
+            "unpkg": "qrpeach.min.js",
+            "jsdelivr": "qrpeach.min.js",
+            "files": [
+              "qrpeach.js",
+              "qrpeach.min.js",
+              "README.md"
+            ],
+            "keywords": [
+              "qr",
+              "qrcode",
+              "browser",
+              "encoder"
+            ],
+            "repository": {
+              "type": "git",
+              "url": "git+https://github.com/dahln/qrpeach.git"
+            },
+            "bugs": {
+              "url": "https://github.com/dahln/qrpeach/issues"
+            },
+            "homepage": "https://github.com/dahln/qrpeach#readme"
+          }
+          EOF
+
+      - name: Preview publish contents
+        working-directory: ${{ steps.package_dir.outputs.path }}
+        run: npm pack --dry-run
+
+      - name: Publish package
+        working-directory: ${{ steps.package_dir.outputs.path }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public --provenance
