@@ -112,4 +112,4 @@ jobs:
 
       - name: Publish package
         working-directory: ${{ steps.package_dir.outputs.path }}
-        run: npm publish --access public --tag "${{ steps.version.outputs.value }}"
+        run: npm publish --access public
