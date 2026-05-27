@@ -59,10 +59,10 @@ jobs:
           if [[ "$version" == *-* ]]; then
             prerelease="${version#*-}"
             npm_tag="${prerelease%%.*}"
-            npm_tag="${npm_tag,,}"
+            npm_tag="$(echo "$npm_tag" | tr '[:upper:]' '[:lower:]')"
           fi
 
-          if [[ ! "$npm_tag" =~ ^[a-z0-9][a-z0-9._-]*$ ]]; then
+          if [[ ! "$npm_tag" =~ ^[a-z0-9][a-z0-9_-]*$ ]]; then
             echo "Resolved npm tag is invalid: $npm_tag" >&2
             exit 1
           fi
