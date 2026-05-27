@@ -58,11 +58,11 @@ jobs:
           npm_tag="latest"
           if [[ "$version" == *-* ]]; then
             prerelease="${version#*-}"
-            npm_tag="${prerelease%%.*}"
+            npm_tag="${prerelease%%.*}" # Use prerelease label (alpha/beta/rc/etc.) as npm dist-tag.
             npm_tag="$(echo "$npm_tag" | tr '[:upper:]' '[:lower:]')"
           fi
 
-          if [[ ! "$npm_tag" =~ ^[a-z0-9][a-z0-9_-]*$ ]]; then
+          if [[ ! "$npm_tag" =~ ^[a-z]([a-z0-9-]*[a-z0-9])?$ ]]; then
             echo "Resolved npm tag is invalid: $npm_tag" >&2
             exit 1
           fi
