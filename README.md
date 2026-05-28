@@ -1,7 +1,9 @@
 # QR Peach
 
-[![npm version](https://img.shields.io/npm/v/qrpeach?label=npm)](https://www.npmjs.com/package/qrpeach)
-[![npm package](https://img.shields.io/badge/install-npm%20install%20qrpeach-cb3837)](https://www.npmjs.com/package/qrpeach)
+[![npm version](https://img.shields.io/npm/v/qrpeach?label=npm&style=flat-square&color=0ea5e9)](https://www.npmjs.com/package/qrpeach)
+[![jsDelivr hits](https://img.shields.io/jsdelivr/npm/hm/qrpeach?label=jsDelivr&style=flat-square&color=14b8a6)](https://www.jsdelivr.com/package/npm/qrpeach)
+[![License: MIT](https://img.shields.io/badge/license-MIT-22c55e?style=flat-square)](https://github.com/dahln/qrpeach/blob/master/LICENSE)
+[![npm package](https://img.shields.io/badge/install-npm%20install%20qrpeach-475569?style=flat-square)](https://www.npmjs.com/package/qrpeach)
 
 [https://orange-sky-048c8d310.7.azurestaticapps.net](https://orange-sky-048c8d310.7.azurestaticapps.net)
 
@@ -15,8 +17,8 @@ QR Peach is a QR reference, interactive encoder, and standalone JavaScript libra
 
 - npm package: https://www.npmjs.com/package/qrpeach
 - Install: `npm install qrpeach`
-- jsDelivr CDN: `https://cdn.jsdelivr.net/npm/qrpeach@1.0.0/dist/qrpeach.min.js`
-- UNPKG CDN: `https://unpkg.com/qrpeach@1.0.0/dist/qrpeach.min.js`
+- jsDelivr CDN: `https://cdn.jsdelivr.net/npm/qrpeach@latest/qrpeach.min.js`
+- UNPKG CDN: `https://unpkg.com/qrpeach@latest/qrpeach.min.js`
 - Direct download: `https://github.com/dahln/qrpeach/releases/latest/download/qrpeach.js`
 
 
