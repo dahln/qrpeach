@@ -126,14 +126,12 @@ After loading `qrpeach.js`, the library exposes only two public methods:
 
 All-day event example:
 
-```js
 {
 	title: 'Launch Day',
 	start: '2026-06-01',
 	end: '2026-06-01',
 	allDay: true
 }
-```
 
 // geo
 { lat: '37.7749', lng: '-122.4194', query: 'Coffee shop' }
