@@ -4,6 +4,9 @@
 [![jsDelivr hits](https://img.shields.io/jsdelivr/npm/hm/qrpeach?label=jsDelivr&style=flat-square&color=14b8a6)](https://www.jsdelivr.com/package/npm/qrpeach)
 [![License: MIT](https://img.shields.io/badge/license-MIT-22c55e?style=flat-square)](https://github.com/dahln/qrpeach/blob/master/LICENSE)
 [![npm package](https://img.shields.io/badge/install-npm%20install%20qrpeach-475569?style=flat-square)](https://www.npmjs.com/package/qrpeach)
+[![Azure Static Web Apps CI/CD](https://github.com/dahln/qrpeach/actions/workflows/azure-static-web-apps-orange-sky-048c8d310.yml/badge.svg)](https://github.com/dahln/qrpeach/actions/workflows/azure-static-web-apps-orange-sky-048c8d310.yml)
+[![Publish to npm](https://github.com/dahln/qrpeach/actions/workflows/publish-npm.yml/badge.svg)](https://github.com/dahln/qrpeach/actions/workflows/publish-npm.yml)
+
 
 [https://orange-sky-048c8d310.7.azurestaticapps.net](https://orange-sky-048c8d310.7.azurestaticapps.net)
 

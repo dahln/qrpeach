@@ -11,7 +11,7 @@
   // [version, total codewords, L data, M data, Q data, H data,
   //  numeric capacity, alphanumeric capacity, binary capacity, kanji capacity]
   //
-  // Data source notes are documented in the repository `sources.html` page.
+  // Data source notes are documented in the repository docs and README.
   const versionData = [
     [1, 26, 19, 16, 13, 9, 41, 25, 17, 10],
     [2, 44, 34, 28, 22, 16, 77, 47, 32, 20],
