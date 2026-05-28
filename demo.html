@@ -3,7 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QR Peach Demo</title>
+  <title>QR Peach Demo | Minimal Browser Example</title>
+  <meta name="description" content="A minimal QR Peach browser example that generates one SVG QR code with qrpeach.js." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://qrpeach.com/demo.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="QR Peach" />
+  <meta property="og:title" content="QR Peach Demo | Minimal Browser Example" />
+  <meta property="og:description" content="See the smallest useful QR Peach snippet: load qrpeach.js and generate an SVG QR code in the page." />
+  <meta property="og:url" content="https://qrpeach.com/demo.html" />
+  <meta property="og:image" content="https://qrpeach.com/assets/peach.svg" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="QR Peach Demo | Minimal Browser Example" />
+  <meta name="twitter:description" content="See the smallest useful QR Peach snippet: load qrpeach.js and generate an SVG QR code in the page." />
+  <meta name="twitter:image" content="https://qrpeach.com/assets/peach.svg" />
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-P12839K21R"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-P12839K21R');
+  </script>
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="stylesheet" href="assets/css/site.css" />
 </head>
@@ -11,12 +33,12 @@
     <h1>QR Peach Demo</h1>
   <p>This page shows the smallest useful QR Peach example: generate one SVG QR code and insert it into the page.</p>
   <div id="qr"></div>
-  <script src="qrpeach.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrpeach@latest/qrpeach.min.js"></script>
   <script>
     async function main() {
       const api = window.QRPeach;
       if (!api) {
-        throw new Error('QRPeach failed to load from qrpeach.js.');
+        throw new Error('QRPeach failed to load from the CDN build.');
       }
 
       const asset = await api.Generate({

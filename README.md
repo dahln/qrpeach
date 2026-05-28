@@ -8,7 +8,7 @@
 [![Publish to npm](https://github.com/dahln/qrpeach/actions/workflows/publish-npm.yml/badge.svg)](https://github.com/dahln/qrpeach/actions/workflows/publish-npm.yml)
 
 
-[https://orange-sky-048c8d310.7.azurestaticapps.net](https://orange-sky-048c8d310.7.azurestaticapps.net)
+[https://qrpeach.com](https://qrpeach.com)
 
 QR Peach is a QR reference, interactive encoder, and standalone JavaScript library. It is designed for three kinds of use:
 
