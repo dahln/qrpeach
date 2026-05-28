@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://orange-sky-048c8d310.7.azurestaticapps.net/sitemap.xml
+Sitemap: https://qrpeach.com/sitemap.xml

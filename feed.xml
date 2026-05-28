@@ -2,38 +2,38 @@
 <rss version="2.0">
   <channel>
     <title>QR Peach</title>
-    <link>https://orange-sky-048c8d310.7.azurestaticapps.net/index.html</link>
+    <link>https://qrpeach.com/index.html</link>
     <description>QR reference, interactive encoder, and browser library updates.</description>
     <language>en-us</language>
     <lastBuildDate>Thu, 28 May 2026 00:00:00 GMT</lastBuildDate>
     <item>
       <title>QR Peach Home</title>
-      <link>https://orange-sky-048c8d310.7.azurestaticapps.net/index.html</link>
-      <guid>https://orange-sky-048c8d310.7.azurestaticapps.net/index.html</guid>
+      <link>https://qrpeach.com/index.html</link>
+      <guid>https://qrpeach.com/index.html</guid>
       <description>Overview of QR Peach and links to learn, encoder, and download pages.</description>
     </item>
     <item>
       <title>Learn How QR Codes Work</title>
-      <link>https://orange-sky-048c8d310.7.azurestaticapps.net/learn.html</link>
-      <guid>https://orange-sky-048c8d310.7.azurestaticapps.net/learn.html</guid>
+      <link>https://qrpeach.com/learn.html</link>
+      <guid>https://qrpeach.com/learn.html</guid>
       <description>Detailed guide covering QR symbol structure, ECC, masking, and capacity.</description>
     </item>
     <item>
       <title>QR Peach Encoder</title>
-      <link>https://orange-sky-048c8d310.7.azurestaticapps.net/encoder.html</link>
-      <guid>https://orange-sky-048c8d310.7.azurestaticapps.net/encoder.html</guid>
+      <link>https://qrpeach.com/encoder.html</link>
+      <guid>https://qrpeach.com/encoder.html</guid>
       <description>Interactive page for generating and debugging QR payloads in the browser.</description>
     </item>
     <item>
       <title>Download qrpeach.js</title>
-      <link>https://orange-sky-048c8d310.7.azurestaticapps.net/download.html</link>
-      <guid>https://orange-sky-048c8d310.7.azurestaticapps.net/download.html</guid>
+      <link>https://qrpeach.com/download.html</link>
+      <guid>https://qrpeach.com/download.html</guid>
       <description>Install the library from npm, use CDN links, or download release assets.</description>
     </item>
     <item>
       <title>Minimal Demo Example</title>
-      <link>https://orange-sky-048c8d310.7.azurestaticapps.net/demo.html</link>
-      <guid>https://orange-sky-048c8d310.7.azurestaticapps.net/demo.html</guid>
+      <link>https://qrpeach.com/demo.html</link>
+      <guid>https://qrpeach.com/demo.html</guid>
       <description>Smallest QR Peach browser example with SVG output.</description>
     </item>
   </channel>
