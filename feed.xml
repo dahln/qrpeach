@@ -3,14 +3,14 @@
   <channel>
     <title>QR Peach</title>
     <link>https://qrpeach.com/index.html</link>
-    <description>QR reference, interactive encoder, and browser library updates.</description>
+    <description>QR reference, interactive Create page, and browser library updates.</description>
     <language>en-us</language>
     <lastBuildDate>Thu, 28 May 2026 00:00:00 GMT</lastBuildDate>
     <item>
       <title>QR Peach Home</title>
       <link>https://qrpeach.com/index.html</link>
       <guid>https://qrpeach.com/index.html</guid>
-      <description>Overview of QR Peach and links to learn, encoder, and download pages.</description>
+      <description>Overview of QR Peach and links to learn, create, and developers pages.</description>
     </item>
     <item>
       <title>Learn How QR Codes Work</title>
@@ -19,16 +19,16 @@
       <description>Detailed guide covering QR symbol structure, ECC, masking, and capacity.</description>
     </item>
     <item>
-      <title>QR Peach Encoder</title>
-      <link>https://qrpeach.com/encoder.html</link>
-      <guid>https://qrpeach.com/encoder.html</guid>
-      <description>Interactive page for generating and debugging QR payloads in the browser.</description>
+      <title>QR Peach Create</title>
+      <link>https://qrpeach.com/create.html</link>
+      <guid>https://qrpeach.com/create.html</guid>
+      <description>Interactive page for creating and debugging QR payloads in the browser.</description>
     </item>
     <item>
-      <title>Download qrpeach.js</title>
-      <link>https://qrpeach.com/download.html</link>
-      <guid>https://qrpeach.com/download.html</guid>
-      <description>Install the library from npm, use CDN links, or download release assets.</description>
+      <title>QR Peach Developers</title>
+      <link>https://qrpeach.com/developers.html</link>
+      <guid>https://qrpeach.com/developers.html</guid>
+      <description>Developer documentation for the library, API entry points, npm, CDN links, and release assets.</description>
     </item>
     <item>
       <title>Minimal Demo Example</title>

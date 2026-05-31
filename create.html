@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QR Peach Encoder | Build and Debug QR Payloads</title>
+  <title>QR Peach Create | Build and Debug QR Payloads</title>
   <meta name="description" content="Build QR payloads in the browser and inspect how bytes, bitstream values, ECC, and modules are laid out." />
   <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://qrpeach.com/encoder.html" />
+  <link rel="canonical" href="https://qrpeach.com/create.html" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="QR Peach" />
-  <meta property="og:title" content="QR Peach Encoder | Build and Debug QR Payloads" />
+  <meta property="og:title" content="QR Peach Create | Build and Debug QR Payloads" />
   <meta property="og:description" content="Generate QR payloads in your browser and inspect bytes, bitstreams, ECC blocks, and final module layout." />
-  <meta property="og:url" content="https://qrpeach.com/encoder.html" />
+  <meta property="og:url" content="https://qrpeach.com/create.html" />
   <meta property="og:image" content="https://qrpeach.com/assets/peach.svg" />
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="QR Peach Encoder | Build and Debug QR Payloads" />
+  <meta name="twitter:title" content="QR Peach Create | Build and Debug QR Payloads" />
   <meta name="twitter:description" content="Generate QR payloads in your browser and inspect bytes, bitstreams, ECC blocks, and final module layout." />
   <meta name="twitter:image" content="https://qrpeach.com/assets/peach.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -159,7 +159,7 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrpeach@latest/qrpeach.min.js"></script>
   <script src="assets/js/qrpeach-diagram.js"></script>
-  <script src="assets/js/live-encoder-page.js"></script>
+  <script src="assets/js/live-create-page.js"></script>
 </head>
 <body>
   <header class="site-header">
@@ -168,7 +168,7 @@
         <span class="brand-mark"><img src="assets/peach.svg" alt="" /></span>
         <span>
           <span class="brand-name">QR Peach</span>
-          <span class="brand-tag">Open QR reference and encoder</span>
+          <span class="brand-tag">QR reference and create QR codes</span>
         </span>
       </a>
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Toggle navigation" data-nav-toggle>
@@ -182,8 +182,8 @@
       <nav class="site-nav" id="site-nav">
         <a class="nav-link" href="index.html">Home</a>
         <a class="nav-link" href="learn.html">Learn</a>
-        <a class="nav-link active" href="encoder.html">Encoder</a>
-        <a class="nav-link" href="download.html">Download</a>
+        <a class="nav-link active" href="create.html">Create</a>
+        <a class="nav-link" href="developers.html">Developers</a>
         <a class="nav-link" href="https://github.com/dahln/QRPeach" target="_blank" rel="noreferrer" aria-label="GitHub"><i data-lucide="github" class="w-4 h-4"></i></a>
       </nav>
     </div>
@@ -193,7 +193,7 @@
     <article class="card">
       <div class="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h2 class="section-heading text-2xl font-bold mb-2">Payload Builder</h2>
+          <h1 class="section-heading text-2xl font-bold mb-2">Create QR Codes</h1>
           <p class="section-intro">Build the payload envelope, then inspect the generated QR symbol immediately beside the inputs.</p>
         </div>
       </div>
@@ -226,9 +226,13 @@
                 <option value="H">H (~30%)</option>
               </select>
             </label>
-            <label class="block md:col-span-2">
+            <label class="block">
               <span class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Version</span>
               <select id="encoder-version" class="w-full px-3 py-3 text-sm bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400"></select>
+            </label>
+            <label class="block">
+              <span class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Mask</span>
+              <select id="encoder-mask-pattern" class="w-full px-3 py-3 text-sm bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400"></select>
             </label>
           </div>
 
@@ -259,7 +263,30 @@
         </div>
       </div>
 
-      <div id="encoder-mask-control" class="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-5"></div>
+      <div id="encoder-mask-control" class="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-5">
+        <div class="text-xs font-semibold uppercase tracking-wide text-slate-500">Mask Control</div>
+        <div class="final-mask-control mt-3">
+          <label class="block">
+            <span class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Mask Pattern</span>
+            <select id="encoder-final-mask-pattern" class="w-full max-w-sm px-3 py-3 text-sm bg-white border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400">
+              <option value="auto" selected>Auto (lowest penalty)</option>
+              <option value="0">Pattern 0</option>
+              <option value="1">Pattern 1</option>
+              <option value="2">Pattern 2</option>
+              <option value="3">Pattern 3</option>
+              <option value="4">Pattern 4</option>
+              <option value="5">Pattern 5</option>
+              <option value="6">Pattern 6</option>
+              <option value="7">Pattern 7</option>
+            </select>
+          </label>
+          <label class="cursor-pointer flex items-center gap-2 flex-wrap">
+            <input id="encoder-final-enable-mask" type="checkbox" checked />
+            <span class="text-sm text-slate-600">Enable Mask</span>
+          </label>
+          <div id="encoder-mask-control-copy" class="final-mask-control-copy text-xs leading-relaxed text-slate-500">Current selection: <span class="font-mono">Auto</span>. Auto tests all eight masks and picks the lowest-penalty option. Disabling the mask is helpful when debugging bits, but the mask is required to ensure the QR is well-formed, readable, and decodable.</div>
+        </div>
+      </div>
     </article>
 
     <article class="card">
@@ -320,7 +347,7 @@
   <script src="assets/js/site-nav.js"></script>
   <script>
     lucide.createIcons();
-    initLiveEncoderPage();
+    initLiveCreatePage();
   </script>
 </body>
 </html>

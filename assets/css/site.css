@@ -574,6 +574,13 @@ pre,
   border: 1px solid rgba(226, 232, 240, 0.9);
 }
 
+.download-item .button-primary,
+.download-item .button-secondary {
+  white-space: nowrap;
+  flex-shrink: 0;
+  align-self: center;
+}
+
 .site-footer {
   max-width: 1180px;
   margin: 0 auto;
@@ -657,5 +664,10 @@ pre,
 
   .download-item {
     flex-direction: column;
+  }
+
+  .download-item .button-primary,
+  .download-item .button-secondary {
+    align-self: flex-start;
   }
 }

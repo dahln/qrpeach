@@ -1517,6 +1517,15 @@
     }
   }
 
+  function normalizeMaskPattern(maskPattern) {
+    if (maskPattern == null || maskPattern === '' || maskPattern === 'auto') return null;
+    const normalized = Number(maskPattern);
+    if (!Number.isInteger(normalized) || normalized < 0 || normalized > 7) {
+      throw new Error('Mask pattern must be an integer between 0 and 7.');
+    }
+    return normalized;
+  }
+
   // Explode interleaved bytes into one entry per placed module bit so the UI
   // can track data/ECC/remainder modules precisely.
   function buildPlacementBits(interleavedCodewords, remainderCount) {
@@ -1671,6 +1680,7 @@
   function buildFinalQrData(encoded, version, eccLevel, options) {
     const generateOptions = options || {};
     const enableMask = generateOptions.enableMask !== false;
+    const requestedMaskPattern = normalizeMaskPattern(generateOptions.maskPattern);
     const rsInfo = getRsBlockInfo(version, eccLevel);
     const blocks = buildRsBlocks(encoded.dataByteValues, version, eccLevel);
     const interleaved = interleaveBlocks(blocks, rsInfo.ecCodewordsPerBlock);
@@ -1681,6 +1691,7 @@
 
     // Evaluate every legal mask pattern against the QR penalty rules.
     for (let maskPattern = 0; maskPattern < 8; maskPattern++) {
+      if (requestedMaskPattern !== null && maskPattern !== requestedMaskPattern) continue;
       const candidate = cloneMatrix(base.matrix);
       applyMaskToMatrix(candidate, base.points, maskPattern);
       placeFormatInfo(candidate, eccLevel, maskPattern);
@@ -1764,7 +1775,10 @@
     });
 
     if (encoded.ok) {
-      model.finalQr = buildFinalQrData(encoded, version, ecc, { enableMask: config.enableMask !== false });
+      model.finalQr = buildFinalQrData(encoded, version, ecc, {
+        enableMask: config.enableMask !== false,
+        maskPattern: config.maskPattern
+      });
     }
 
     if (format != null) {

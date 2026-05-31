@@ -11,12 +11,12 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://qrpeach.com/encoder.html</loc>
+    <loc>https://qrpeach.com/create.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://qrpeach.com/download.html</loc>
+    <loc>https://qrpeach.com/developers.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>

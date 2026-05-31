@@ -1,7 +1,7 @@
 (function (global) {
   'use strict';
 
-  // This page controller wires up encoder form inputs to QRPeach's runtime API,
+  // This page controller wires up the Create page inputs to QRPeach's runtime API,
   // then renders human-readable summaries, diagrams, and final-symbol metadata.
   // The implementation intentionally favors explicit control flow and plain
   // JavaScript syntax so the generated distribution remains easy to review.
@@ -210,7 +210,8 @@
     syncDownloadButtons(state);
     try {
       await encoder.Generate(Object.assign({}, state.currentModel, {
-        enableMask: state.enableMask
+        enableMask: true,
+        maskPattern: state.maskPattern
       }), format, {
         filename: buildDownloadFilename(state.currentModel, format),
         download: true
@@ -488,6 +489,7 @@
       inputs: deepClone(DEFAULT_INPUTS),
       version: 2,
       versionLocked: false,
+      maskPattern: 'auto',
       ecc: 'M',
       zoom: 180,
       showCombinedLabels: true,
@@ -520,7 +522,8 @@
         inputs: state.inputs[state.type],
         version: version,
         ecc: state.ecc,
-        enableMask: state.enableMask
+        enableMask: state.enableMask,
+        maskPattern: state.maskPattern
       });
       lastModel = candidate;
       if (candidate.ok) {
@@ -652,7 +655,8 @@
         inputs: state.inputs[state.type],
         version: state.version,
         ecc: state.ecc,
-        enableMask: state.enableMask
+        enableMask: state.enableMask,
+        maskPattern: state.maskPattern
       });
     } else {
       const inferred = inferAutoSizedModel(encoder, state);
@@ -702,19 +706,20 @@
     syncValueModeControls(state);
   }
 
-  function initLiveEncoderPage() {
+  function initLiveCreatePage() {
     const encoder = getEncoderApi();
     if (!encoder || !global.QRPeachDiagram) return;
     bindTooltip();
 
     const state = createState();
     const versionSelect = document.getElementById('encoder-version');
+    const maskSelect = document.getElementById('encoder-mask-pattern');
     const typeSelect = document.getElementById('encoder-type');
     const debugCurrentButton = document.getElementById('encoder-debug-current');
     const debugUploadButton = document.getElementById('encoder-debug-upload');
     const debugClearButton = document.getElementById('encoder-debug-clear');
     const debugUploadInput = document.getElementById('encoder-debug-upload-input');
-    if (!versionSelect || !typeSelect) return;
+    if (!versionSelect || !maskSelect || !typeSelect) return;
 
     ['svg', 'png', 'jpg'].forEach(function (format) {
       const button = document.getElementById('encoder-download-' + format);
@@ -736,6 +741,20 @@
       option.textContent = 'Version ' + version + ' (' + (17 + 4 * version) + '×' + (17 + 4 * version) + ')';
       if (state.versionLocked && version === state.version) option.selected = true;
       versionSelect.appendChild(option);
+    }
+
+    const autoMaskOption = document.createElement('option');
+    autoMaskOption.value = 'auto';
+    autoMaskOption.textContent = 'Auto (lowest penalty)';
+    autoMaskOption.selected = state.maskPattern === 'auto';
+    maskSelect.appendChild(autoMaskOption);
+
+    for (let maskPattern = 0; maskPattern < 8; maskPattern++) {
+      const option = document.createElement('option');
+      option.value = String(maskPattern);
+      option.textContent = 'Mask ' + maskPattern;
+      if (String(maskPattern) === state.maskPattern) option.selected = true;
+      maskSelect.appendChild(option);
     }
 
     typeSelect.addEventListener('change', function () {
@@ -765,6 +784,10 @@
         state.versionLocked = true;
         state.version = parseInt(this.value, 10);
       }
+      renderEncoderPanel(state);
+    });
+    maskSelect.addEventListener('change', function () {
+      state.maskPattern = this.value;
       renderEncoderPanel(state);
     });
     document.getElementById('encoder-ecc').addEventListener('change', function () {
@@ -818,5 +841,5 @@
     syncDownloadButtons(state);
   }
 
-  global.initLiveEncoderPage = initLiveEncoderPage;
+  global.initLiveCreatePage = initLiveCreatePage;
 })(typeof window !== 'undefined' ? window : this);

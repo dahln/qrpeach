@@ -10,11 +10,11 @@
 
 [https://qrpeach.com](https://qrpeach.com)
 
-QR Peach is a QR reference, interactive encoder, and standalone JavaScript library. It is designed for three kinds of use:
+QR Peach is a QR reference, interactive QR creation page, and standalone JavaScript library. It is designed for three kinds of use:
 
 1. Learn how QR codes are structured and why scanners can decode them.
-2. Build QR Codes and debug QR Codes.
-3. Use the `qrpeach.js` runtime in your own application.
+2. Create QR codes and debug QR codes.
+3. Develop with the `qrpeach.js` runtime in your own application.
 
 ## Package Status
 
@@ -244,7 +244,7 @@ When generation fails, the result still includes helpful fields such as `error`,
 If you are using QR Peach to build or validate QR features in another project, the most effective sequence is:
 
 1. Use `learn.html` to understand the structure you care about.
-2. Reproduce the same case in `encoder.html` and inspect the generated payload, version profile, and final matrix.
+2. Reproduce the same case in `create.html` and inspect the generated payload, version profile, and final matrix.
 3. Move that payload type and version/ECC configuration into your own application with `qrpeach.js`.
 4. Render the generated asset directly, or use `model.finalQr.matrix` when you need lower-level access.
 5. If you need a verification pass, feed your generated SVG, PNG, or JPEG back through `QRPeach.Debug(...)`.
