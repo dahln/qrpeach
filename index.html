@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QR Peach</title>
-  <meta name="description" content="QR Peach: learn how QR codes work, create and debug QR payloads with the Create page, and add QR generation to your own application with qrpeach.js." />
+  <title>QR PEACH | Share Anywhere</title>
+  <meta name="description" content="QR Peach offers four paths: use the App, create QR payloads in browser, learn QR structure, and integrate qrpeach.js." />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://qrpeach.com/index.html" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="QR Peach" />
-  <meta property="og:title" content="QR Peach | Learn, Create, and Develop QR Codes" />
-  <meta property="og:description" content="Learn QR code fundamentals, create and debug payloads, and develop with qrpeach.js in your own browser applications." />
+  <meta property="og:title" content="QR Peach | Share Anywhere" />
+  <meta property="og:description" content="Use the App, create QR payloads in browser, learn QR structure, or integrate qrpeach.js." />
   <meta property="og:url" content="https://qrpeach.com/index.html" />
   <meta property="og:image" content="https://qrpeach.com/assets/peach.svg" />
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="QR Peach | Learn, Create, and Develop QR Codes" />
-  <meta name="twitter:description" content="Learn QR code fundamentals, create and debug payloads, and develop with qrpeach.js in your own browser applications." />
+  <meta name="twitter:title" content="QR Peach | Share Anywhere" />
+  <meta name="twitter:description" content="Use the App, create QR payloads in browser, learn QR structure, or integrate qrpeach.js." />
   <meta name="twitter:image" content="https://qrpeach.com/assets/peach.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -42,7 +42,7 @@
         <span class="brand-mark"><img src="assets/peach.svg" alt="" /></span>
         <span>
           <span class="brand-name">QR Peach</span>
-          <span class="brand-tag">QR reference and create QR codes</span>
+          <span class="brand-tag">Share Anywhere</span>
         </span>
       </a>
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Toggle navigation" data-nav-toggle>
@@ -58,82 +58,101 @@
         <a class="nav-link" href="learn.html">Learn</a>
         <a class="nav-link" href="create.html">Create</a>
         <a class="nav-link" href="developers.html">Developers</a>
+        <a class="nav-link" href="https://app.qrpeach.com">App</a>
         <a class="nav-link" href="https://github.com/dahln/QRPeach" target="_blank" rel="noreferrer" aria-label="GitHub"><i data-lucide="github" class="w-4 h-4"></i></a>
       </nav>
     </div>
   </header>
 
-  <main class="page-shell section-stack">
-    <section class="page-hero">
-      <div class="hero-kicker"><i data-lucide="sparkles" class="w-4 h-4"></i> Three ways to use QR Peach</div>
-      <div class="mt-6">
-        <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-5">Learn, create, and develop QR codes.</h1>
-        <p class="text-lg text-slate-200 leading-8 max-w-2xl">QR Peach helps you understand how QR codes work, create and debug real QR payloads, and develop your own applications with <strong>qrpeach.js</strong>.</p>
-        <div class="cta-row">
-          <a class="button-secondary" href="learn.html"><i data-lucide="layers-3" class="w-4 h-4"></i> Learn</a>
-          <a class="button-primary" href="create.html"><i data-lucide="scan-search" class="w-4 h-4"></i> Open Create</a>
-          <a class="button-secondary" href="developers.html"><i data-lucide="code-xml" class="w-4 h-4"></i> Developers</a>
+  <main class="home-shell">
+    <section class="hero-panel">
+      <div class="hero-copy">
+        <p class="eyebrow">QR Peach</p>
+        <h1>QR codes for links that just work.</h1>
+        <p class="hero-lede">
+          Choose your path. You can create in-browser, learn QR structure, integrate qrpeach.js,
+          or use the app for create/share/track workflows.
+        </p>
+
+        <ul class="path-list" aria-label="QR Peach paths">
+          <!-- <li class="path-item">
+            <div>
+              <p class="path-title">Use the App</p>
+              <p class="path-desc">Create, share, and track QR links in one place.</p>
+            </div>
+            <a class="path-button" href="https://app.qrpeach.com">Open App</a>
+          </li> -->
+          <li class="path-item">
+            <div>
+              <p class="path-title">Create</p>
+              <p class="path-desc">Build and inspect QR payloads in browser.</p>
+            </div>
+            <a class="path-button" href="create.html">Open Create</a>
+          </li>
+          <li class="path-item">
+            <div>
+              <p class="path-title">Learn</p>
+              <p class="path-desc">Study QR structure and encoding flow.</p>
+            </div>
+            <a class="path-button" href="learn.html">Start Learning</a>
+          </li>
+          <li class="path-item">
+            <div>
+              <p class="path-title">Develop</p>
+              <p class="path-desc">Integrate qrpeach.js in your application.</p>
+            </div>
+            <a class="path-button" href="developers.html">View Developers</a>
+          </li>
+        </ul>
+      </div>
+
+      <aside class="preview-card" aria-label="QR Peach preview">
+        <div class="preview-top">
+          <span class="preview-pill">Scan-ready</span>
+          <span class="preview-label">PNG and SVG export</span>
         </div>
-      </div>
-    </section>
 
-    <section class="card">
-      <div>
-        <h2 class="section-heading text-2xl font-bold mb-2">What a QR code is</h2>
-        <p class="section-intro">A QR code is a square grid of dark and light modules. Fixed patterns help scanners find the symbol and orient it correctly. The remaining open modules carry your payload plus error-correction data so the message can still scan when part of the symbol is damaged.</p>
-      </div>
+        <div class="logo-stage" aria-hidden="true">
+          <img src="assets/peach.svg" alt="" class="hero-logo" />
+        </div>
 
-      <div class="grid md:grid-cols-3 gap-4 mt-6">
-        <article class="rounded-3xl border border-slate-200 bg-slate-50 p-5">
-          <div class="text-xs font-semibold uppercase tracking-wide text-slate-500">Structure</div>
-          <p class="mt-3 text-sm leading-7 text-slate-600">Finder, timing, alignment, format, and version patterns are reserved landmarks. They help a camera lock onto the QR code before it reads your message.</p>
-        </article>
-        <article class="rounded-3xl border border-slate-200 bg-slate-50 p-5">
-          <div class="text-xs font-semibold uppercase tracking-wide text-slate-500">Payload</div>
-          <p class="mt-3 text-sm leading-7 text-slate-600">Your text, URL, Wi-Fi settings, or contact card turns into bytes and bits. Those bits are written into the remaining modules in a defined zig-zag placement order.</p>
-        </article>
-        <article class="rounded-3xl border border-slate-200 bg-slate-50 p-5">
-          <div class="text-xs font-semibold uppercase tracking-wide text-slate-500">Recovery</div>
-          <p class="mt-3 text-sm leading-7 text-slate-600">QR codes also store Reed-Solomon error-correction codewords. That redundancy gives scanners a chance to recover the payload even when some modules are missing or obscured.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="grid md:grid-cols-3 gap-5">
-      <a class="feature-link" href="learn.html">
-        <article class="feature-card h-full">
-          <div class="source-badge"><i data-lucide="layers-3" class="w-5 h-5"></i></div>
-          <h2 class="card-title mt-4">Learn how QR codes are created</h2>
-          <p class="card-copy">Follow the full path from payload text to bytes, bitstream structure, error correction, and final module placement.</p>
-        </article>
-      </a>
-      <a class="feature-link" href="create.html">
-        <article class="feature-card h-full">
-          <div class="source-badge"><i data-lucide="scan-search" class="w-5 h-5"></i></div>
-          <h2 class="card-title mt-4">Create and debug QR codes</h2>
-          <p class="card-copy">Build payloads, inspect the encoding steps, and use the Create page to troubleshoot what ends up inside the symbol.</p>
-        </article>
-      </a>
-      <a class="feature-link" href="developers.html">
-        <article class="feature-card h-full">
-          <div class="source-badge"><i data-lucide="code-xml" class="w-5 h-5"></i></div>
-          <h2 class="card-title mt-4">Develop with QR Peach</h2>
-          <p class="card-copy">Use <strong>qrpeach.js</strong> as the reusable QR engine behind your own tools, demos, and production workflows.</p>
-        </article>
-      </a>
-      <a class="feature-link md:col-span-3" href="https://github.com/dahln/QRPeach" target="_blank" rel="noreferrer">
-        <article class="card h-full md:flex md:items-center md:justify-between gap-6">
+        <div class="preview-metrics">
           <div>
-            <h2 class="card-title">Open Source</h2>
-            <p class="card-copy mt-4">Explore the source on GitHub, use <strong>qrpeach.js</strong> in your own work, and follow the project.</p>
+            <strong>1</strong>
+            <span>Create QR</span>
           </div>
-          <span class="button-primary mt-2 md:mt-0"><i data-lucide="arrow-up-right" class="w-4 h-4"></i> View on GitHub</span>
-        </article>
-      </a>
+          <div>
+            <strong>2</strong>
+            <span>Share QR <strong>anywhere</strong>s</span>
+          </div>
+          <div>
+            <strong>3</strong>
+            <span>Track QR Performance</span>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="support-band">
+      <div>
+        <h2>Not sure where to start?</h2>
+        <p>
+          Pick a goal and jump to the path that fits.
+        </p>
+      </div>
+      <div class="support-links">
+        <a href="https://app.qrpeach.com" class="support-link">I want to create, share, and track QR links online</a>
+        <a href="create.html" class="support-link">I want to make a QR quickly</a>
+        <a href="learn.html" class="support-link">I want to understand how QR works</a>
+        <a href="developers.html" class="support-link">I want to embed QR generation in my app</a>
+      </div>
     </section>
   </main>
 
   <footer class="site-footer">
+    <div class="home-footer">
+      <span>Copyright &copy; 2026 QR Peach</span>
+    </div>
   </footer>
 
   <script src="assets/js/site-nav.js"></script>

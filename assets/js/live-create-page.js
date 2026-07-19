@@ -193,18 +193,39 @@
   }
 
   function syncDownloadButtons(state) {
+    const hasValidModel = Boolean(state.currentModel && state.currentModel.ok);
+    const canDownload = hasValidModel && !state.downloadBusy && state.enableMask;
     ['svg', 'png', 'jpg'].forEach(function (format) {
       const button = document.getElementById('encoder-download-' + format);
       if (!button) return;
-      const enabled = Boolean(state.currentModel && state.currentModel.ok) && !state.downloadBusy;
-      button.disabled = !enabled;
+      button.disabled = !canDownload;
       button.textContent = state.downloadBusy && state.downloadFormat === format ? 'Preparing…' : format.toUpperCase();
     });
+
+    const status = document.getElementById('encoder-download-status');
+    if (!status) return;
+
+    if (!hasValidModel) {
+      status.textContent = 'Generate a valid QR to enable downloads.';
+      return;
+    }
+
+    if (!state.enableMask) {
+      status.textContent = 'Downloads are disabled while Enable Mask is off. Turn on Enable Mask to export SVG, PNG, or JPG.';
+      return;
+    }
+
+    if (state.downloadBusy) {
+      status.textContent = 'Preparing download...';
+      return;
+    }
+
+    status.textContent = 'SVG, PNG, and JPG are ready to download.';
   }
 
   async function downloadCurrentQr(state, format) {
     const encoder = getEncoderApi();
-    if (!encoder || !state.currentModel || !state.currentModel.ok || state.downloadBusy) return;
+    if (!encoder || !state.currentModel || !state.currentModel.ok || state.downloadBusy || !state.enableMask) return;
     state.downloadBusy = true;
     state.downloadFormat = format;
     syncDownloadButtons(state);

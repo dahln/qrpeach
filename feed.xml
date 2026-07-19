@@ -3,38 +3,44 @@
   <channel>
     <title>QR Peach</title>
     <link>https://qrpeach.com/index.html</link>
-    <description>QR reference, interactive Create page, and browser library updates.</description>
+    <description>QR Peach paths: App, Create, Learn, and Developers with current page updates.</description>
     <language>en-us</language>
-    <lastBuildDate>Thu, 28 May 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Sat, 18 Jul 2026 00:00:00 GMT</lastBuildDate>
     <item>
       <title>QR Peach Home</title>
       <link>https://qrpeach.com/index.html</link>
       <guid>https://qrpeach.com/index.html</guid>
-      <description>Overview of QR Peach and links to learn, create, and developers pages.</description>
+      <description>Homepage with the four QR Peach paths: App, Create, Learn, and Developers.</description>
     </item>
     <item>
-      <title>Learn How QR Codes Work</title>
+      <title>QR Peach Learn</title>
       <link>https://qrpeach.com/learn.html</link>
       <guid>https://qrpeach.com/learn.html</guid>
-      <description>Detailed guide covering QR symbol structure, ECC, masking, and capacity.</description>
+      <description>Learn QR structure, encoding flow, ECC, masking, and capacity tradeoffs.</description>
     </item>
     <item>
       <title>QR Peach Create</title>
       <link>https://qrpeach.com/create.html</link>
       <guid>https://qrpeach.com/create.html</guid>
-      <description>Interactive page for creating and debugging QR payloads in the browser.</description>
+      <description>Create QR payloads in browser and inspect bytes, bitstream, ECC, and module placement.</description>
     </item>
     <item>
       <title>QR Peach Developers</title>
       <link>https://qrpeach.com/developers.html</link>
       <guid>https://qrpeach.com/developers.html</guid>
-      <description>Developer documentation for the library, API entry points, npm, CDN links, and release assets.</description>
+      <description>Integrate qrpeach.js with API entry points, npm package, CDN URLs, and release assets.</description>
     </item>
     <item>
-      <title>Minimal Demo Example</title>
+      <title>QR Peach Download</title>
+      <link>https://qrpeach.com/download.html</link>
+      <guid>https://qrpeach.com/download.html</guid>
+      <description>Download qrpeach.js from npm, jsDelivr, UNPKG, or GitHub release assets.</description>
+    </item>
+    <item>
+      <title>QR Peach Demo</title>
       <link>https://qrpeach.com/demo.html</link>
       <guid>https://qrpeach.com/demo.html</guid>
-      <description>Smallest QR Peach browser example with SVG output.</description>
+      <description>Quick browser example that generates an SVG QR code with qrpeach.js.</description>
     </item>
   </channel>
 </rss>
