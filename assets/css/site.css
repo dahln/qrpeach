@@ -34,10 +34,6 @@ body {
   color: var(--ink-900);
 }
 
-a[href*="app.qrpeach.com"] {
-  display: none !important;
-}
-
 code,
 pre,
 .font-mono {
