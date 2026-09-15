@@ -570,6 +570,16 @@
     const fields = document.getElementById('encoder-type-fields');
     const preview = document.getElementById('encoder-payload-preview');
     const type = state.type;
+    const activeElement = document.activeElement;
+    const shouldRestoreFocus = Boolean(activeElement && fields.contains(activeElement));
+    const activeFieldName = shouldRestoreFocus ? activeElement.dataset.field : '';
+    const activeInputType = shouldRestoreFocus ? activeElement.type : '';
+    const activeSelectionStart = shouldRestoreFocus && typeof activeElement.selectionStart === 'number'
+      ? activeElement.selectionStart
+      : null;
+    const activeSelectionEnd = shouldRestoreFocus && typeof activeElement.selectionEnd === 'number'
+      ? activeElement.selectionEnd
+      : null;
 
     help.innerHTML = '\n      <div class="rounded-2xl border border-indigo-100 bg-white px-4 py-3">\n        <div class="text-xs font-semibold uppercase tracking-wide text-indigo-700">' + escapeHtml(payloadInfo.typeLabel) + ' Payload</div>\n        <p class="mt-1 text-sm text-slate-600 leading-relaxed">' + escapeHtml(payloadInfo.description) + '</p>\n        <p class="mt-2 text-[11px] text-slate-500">Scanner rule: ' + escapeHtml(payloadInfo.scannerRule) + '</p>\n      </div>\n    ';
 
@@ -597,6 +607,16 @@
       fields.innerHTML = '\n        <label class="block">\n          <span class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Latitude</span>\n          <input data-field="lat" type="text" value="' + escapeHtml(state.inputs.geo.lat) + '" class="w-full px-4 py-3 text-sm bg-slate-50 border border-slate-200 rounded-2xl font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400" spellcheck="false" />\n        </label>\n        <label class="block">\n          <span class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Longitude</span>\n          <input data-field="lng" type="text" value="' + escapeHtml(state.inputs.geo.lng) + '" class="w-full px-4 py-3 text-sm bg-slate-50 border border-slate-200 rounded-2xl font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400" spellcheck="false" />\n        </label>\n        <label class="block md:col-span-2">\n          <span class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Optional Query</span>\n          <input data-field="query" type="text" value="' + escapeHtml(state.inputs.geo.query) + '" class="w-full px-4 py-3 text-sm bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400" spellcheck="false" />\n        </label>\n      ';
     } else {
       fields.innerHTML = '\n        <label class="block md:col-span-2">\n          <span class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Text</span>\n          <textarea data-field="value" rows="4" class="w-full px-4 py-3 text-sm bg-slate-50 border border-slate-200 rounded-2xl resize-y font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400" spellcheck="false">' + escapeHtml(state.inputs.text.value) + '</textarea>\n        </label>\n      ';
+    }
+
+    if (activeFieldName) {
+      const restoreTarget = fields.querySelector('[data-field="' + activeFieldName + '"]');
+      if (restoreTarget && restoreTarget.type === activeInputType) {
+        restoreTarget.focus();
+        if (activeSelectionStart !== null && activeSelectionEnd !== null && typeof restoreTarget.setSelectionRange === 'function') {
+          restoreTarget.setSelectionRange(activeSelectionStart, activeSelectionEnd);
+        }
+      }
     }
 
     preview.innerHTML = '\n      <div class="flex items-start justify-between gap-3 mb-2">\n        <div>\n          <div class="text-xs font-semibold uppercase tracking-wide text-slate-500">Encoded Payload</div>\n          <div class="text-[11px] text-slate-500 mt-1">Envelope: ' + escapeHtml(payloadInfo.envelope) + '</div>\n        </div>\n        <div class="text-[11px] text-slate-500 max-w-[220px] text-right">Scanners infer the selected type from the payload string itself, not from a dedicated QR structural mode.</div>\n      </div>\n      <pre class="font-mono text-[12px] leading-6 text-slate-700 whitespace-pre-wrap break-all m-0">' + escapeHtml(payloadInfo.payload) + '</pre>\n    ';
